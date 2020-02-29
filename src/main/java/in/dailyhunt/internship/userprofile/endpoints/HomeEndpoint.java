@@ -23,18 +23,14 @@ public class HomeEndpoint {
         this.homeService = homeService;
     }
 
-    @GetMapping
-    public ResponseEntity<String> getAll(){
-        return ResponseEntity.ok().body("Getting All");
-    }
 
     //home page of user profile
 
-/*    @GetMapping("/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<?> getDetails(@PathVariable Long userId){
         return ResponseEntity.ok().body(homeService.getDetailsById(userId));
     }
-*/
+
     @GetMapping("/following/{userId}")
     public ResponseEntity<?> getFollowingList(@PathVariable Long userId){
         return ResponseEntity.ok().body(homeService.getFollowingById(userId));
