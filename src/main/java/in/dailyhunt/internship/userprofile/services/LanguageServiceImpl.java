@@ -2,12 +2,14 @@ package in.dailyhunt.internship.userprofile.services;
 
 import in.dailyhunt.internship.userprofile.entities.Language;
 import in.dailyhunt.internship.userprofile.exceptions.BadRequestException;
+import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
 import in.dailyhunt.internship.userprofile.repositories.LanguageRepository;
 import in.dailyhunt.internship.userprofile.services.interfaces.LanguageService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LanguageServiceImpl implements LanguageService {
@@ -22,6 +24,21 @@ public class LanguageServiceImpl implements LanguageService {
     @Transactional
     public List<Language> getAllLanguages(){
         return languageRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public Language findLanguageById(Long id) {
+        return languageRepository.findById(id).get();
+    }
+
+    @Override
+    @Transactional
+    public Language findLanguageByName(String name) throws ResourceNotFoundException{
+        Optional<Language> language = languageRepository.findByName(name);
+        if(!language.isPresent())
+            throw new ResourceNotFoundException("language with name "+name+" does not exist");
+        return language.get();
     }
 
     @Override

@@ -12,4 +12,5 @@ public interface UserService {
     User findUserById(Long userid) throws ResourceNotFoundException;
 
     User saveUser(SignUpForm signUpForm);
+
 }

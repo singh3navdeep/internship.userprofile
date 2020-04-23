@@ -1,6 +1,6 @@
 package in.dailyhunt.internship.userprofile.endpoints;
 
-import in.dailyhunt.internship.userprofile.client_model.response.UserDetails;
+import in.dailyhunt.internship.userprofile.client_model.response.PreferenceResponse;
 import in.dailyhunt.internship.userprofile.services.interfaces.HomeService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeEndpoint {
     static final String HOME_BASE_URL = "api/v1/home_profile";
 
-    @Autowired
     private HomeService homeService;
 
+    @Autowired
     public HomeEndpoint(HomeService homeService){
         this.homeService = homeService;
     }
@@ -32,12 +32,12 @@ public class HomeEndpoint {
     }
 
     @GetMapping("/following/{userId}")
-    public ResponseEntity<?> getFollowingList(@PathVariable Long userId){
+    public ResponseEntity<PreferenceResponse> getFollowingList(@PathVariable Long userId){
         return ResponseEntity.ok().body(homeService.getFollowingById(userId));
     }
 
     @GetMapping("/blocked/{userId}")
-    public ResponseEntity<?> getBlockedList(@PathVariable Long userId){
+    public ResponseEntity<PreferenceResponse> getBlockedList(@PathVariable Long userId){
         return ResponseEntity.ok().body(homeService.getBlockedById(userId));
     }
 

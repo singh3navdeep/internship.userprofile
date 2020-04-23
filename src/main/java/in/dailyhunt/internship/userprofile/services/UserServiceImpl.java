@@ -1,17 +1,16 @@
 package in.dailyhunt.internship.userprofile.services;
 
+import in.dailyhunt.internship.userprofile.client_model.request.PreferenceRequest;
 import in.dailyhunt.internship.userprofile.client_model.request.SignUpForm;
-import in.dailyhunt.internship.userprofile.entities.Gender;
-import in.dailyhunt.internship.userprofile.entities.Language;
-import in.dailyhunt.internship.userprofile.entities.Topic;
-import in.dailyhunt.internship.userprofile.entities.User;
+import in.dailyhunt.internship.userprofile.entities.*;
 import in.dailyhunt.internship.userprofile.enums.GenderValue;
 import in.dailyhunt.internship.userprofile.exceptions.BadRequestException;
 import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
 import in.dailyhunt.internship.userprofile.repositories.GenderRepository;
-import in.dailyhunt.internship.userprofile.repositories.LanguageRepository;
-import in.dailyhunt.internship.userprofile.repositories.TopicRepository;
 import in.dailyhunt.internship.userprofile.repositories.UserRepository;
+import in.dailyhunt.internship.userprofile.services.interfaces.BlockedService;
+import in.dailyhunt.internship.userprofile.services.interfaces.FollowingService;
+import in.dailyhunt.internship.userprofile.services.interfaces.LanguageService;
 import in.dailyhunt.internship.userprofile.services.interfaces.UserService;
 import org.springframework.stereotype.Service;
 
@@ -26,17 +25,20 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
   //  private PasswordEncoder passwordEncoder;
-    private LanguageRepository languageRepository;
-    private TopicRepository topicRepository;
+    private LanguageService languageService;
     private GenderRepository genderRepository;
+    private FollowingService followingService;
+    private BlockedService blockedService;
 
-    public UserServiceImpl(UserRepository userRepository, LanguageRepository languageRepository,
-                           TopicRepository topicRepository, GenderRepository genderRepository){
+    public UserServiceImpl(UserRepository userRepository, LanguageService languageService,
+                           GenderRepository genderRepository, FollowingService followingService,
+                           BlockedService blockedService){
         this.userRepository = userRepository;
     //    this.passwordEncoder = passwordEncoder;
-        this.languageRepository = languageRepository;
-        this.topicRepository = topicRepository;
+        this.languageService = languageService;
         this.genderRepository = genderRepository;
+        this.followingService = followingService;
+        this.blockedService = blockedService;
     }
 
     @Override
@@ -68,31 +70,11 @@ public class UserServiceImpl implements UserService {
                 .date_of_birth(signUpForm.getDate_of_birth())
                 .username(signUpForm.getUsername())
                 .build();
-        Optional<Language> language = languageRepository.findByName(signUpForm.getNews_language());
-        if(!language.isPresent())
-            throw new BadRequestException("This language not available");
+        if(signUpForm.getNews_language() != null) {
+            Language language = languageService.findLanguageById(signUpForm.getNews_language());
 
-        user.setNews_language(language.get());
-
-        Set<String> recieved_following = signUpForm.getFollowing();
-        Set<String> recieved_blocked = signUpForm.getBlocked();
-
-        Set<Topic> send_following = new HashSet<Topic>();
-        Set<Topic> send_blocked = new HashSet<Topic>();
-
-        for(String topic : recieved_following){
-            Topic topic_following = topicRepository.findByName(topic)
-                    .orElseThrow(() -> new BadRequestException("Fail! -> Cause: Topic not available."));
-            send_following.add(topic_following);
+            user.setNews_language(language);
         }
-
-        for(String topic : recieved_blocked){
-            Topic topic_blocked = topicRepository.findByName(topic)
-                    .orElseThrow(() -> new BadRequestException("Fail! -> Cause: Topic not available."));
-            send_blocked.add(topic_blocked);
-        }
-        user.setFollowing(send_following);
-        user.setBlocked(send_blocked);
 
         String recieved_gender = signUpForm.getGender();
         Gender send_gender;
@@ -115,8 +97,24 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Please enter gender either male, or female, or other");
         }
         user.setGender(send_gender);
-        userRepository.save(user);
 
+        userRepository.save(user);
+        followingService.addFollowing(PreferenceRequest.builder()
+                        .userId(user.getId())
+                        .genreIds(signUpForm.getFollowing_genres())
+                        .languageIds(signUpForm.getFollowing_languages())
+                        .localityIds(signUpForm.getFollowing_localities())
+                        .tagIds(signUpForm.getFollowing_tags())
+                        .build());
+        blockedService.addBlocked(PreferenceRequest.builder()
+                .userId(user.getId())
+                .genreIds(signUpForm.getBlocked_genres())
+                .languageIds(signUpForm.getBlocked_languages())
+                .localityIds(signUpForm.getBlocked_localities())
+                .tagIds(signUpForm.getBlocked_tags())
+                .build());
         return user;
     }
+
+
 }

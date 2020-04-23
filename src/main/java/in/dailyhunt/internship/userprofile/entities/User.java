@@ -1,5 +1,6 @@
 package in.dailyhunt.internship.userprofile.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import in.dailyhunt.internship.userprofile.enums.GenderValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,33 +60,11 @@ public class User {
     @Column(name = "DATE_OF_BIRTH")
     private Date date_of_birth;
 
- /*   @NotBlank
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "USER_APP_LANGUAGE_MAPPING",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "LANGUAGE_ID"))
-    private Language app_language;
-*/
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "USER_NEWS_LANGUAGE_MAPPING",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "LANGUAGE_ID"))
     private Language news_language;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "TOPICS_FOLLOWING",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id"))
-    @Column(name = "FOLLOWING")
-    private Set<Topic> following;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "TOPICS_BLOCKED",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id"))
-    @Column(name = "BLOCKED")
-    private Set<Topic> blocked;
-
-//    @NotBlank
-//    private String app_version;
 }

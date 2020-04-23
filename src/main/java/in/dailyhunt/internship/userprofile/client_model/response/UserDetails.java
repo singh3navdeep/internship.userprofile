@@ -16,8 +16,6 @@ public class UserDetails {
         return UserDetails.builder()
                 .name(user.getName())
                 .username(user.getUsername())
-                .following_count(user.getFollowing().size())
-                .blocked_count(user.getBlocked().size())
                 .build();
     }
 }

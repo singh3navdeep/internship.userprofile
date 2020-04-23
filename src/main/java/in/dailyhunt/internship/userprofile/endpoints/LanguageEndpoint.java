@@ -16,9 +16,9 @@ import javax.validation.Valid;
 public class LanguageEndpoint {
     static final String BASE_URL = "api/v1/language_profile";
 
-    @Autowired
     private LanguageService languageService;
 
+    @Autowired
     public LanguageEndpoint(LanguageService languageService){
         this.languageService = languageService;
     }

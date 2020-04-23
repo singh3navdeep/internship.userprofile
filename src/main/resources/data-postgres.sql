@@ -6,6 +6,3 @@ INSERT INTO LANGUAGES(name) VALUES('English');
 INSERT INTO LANGUAGES(name) VALUES('Hindi');
 INSERT INTO LANGUAGES(name) VALUES('Tamil');
 
-INSERT INTO TOPIC(name) VALUES('Politics');
-INSERT INTO TOPIC(name) VALUES('Cricket');
-INSERT INTO TOPIC(name) VALUES('Entertainment');
