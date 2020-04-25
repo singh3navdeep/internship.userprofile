@@ -1,5 +1,6 @@
 package in.dailyhunt.internship.userprofile.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,15 +22,32 @@ public class BlockedSet {
     @NotNull
     private Long userId;
 
-    @ElementCollection
-    private List<Long> genreIds;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_blocked_genres",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<GenreData> genreData;
 
-    @ElementCollection
-    private List<Long> languageIds;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_blocked_languages",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<LanguageData> languageData;
 
-    @ElementCollection
-    private List<Long> localityIds;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_blocked_localities",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "locality_id"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<LocalityData> localityData;
 
-    @ElementCollection
-    private List<Long> tagIds;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_blocked_tags",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<TagData> tagData;
+
 }

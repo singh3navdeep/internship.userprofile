@@ -1,10 +1,9 @@
 package in.dailyhunt.internship.userprofile.services;
 import in.dailyhunt.internship.userprofile.client_model.request.PreferenceRequest;
-import in.dailyhunt.internship.userprofile.entities.BlockedSet;
-import in.dailyhunt.internship.userprofile.entities.FollowingSet;
+import in.dailyhunt.internship.userprofile.entities.*;
 import in.dailyhunt.internship.userprofile.exceptions.BadRequestException;
 import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
-import in.dailyhunt.internship.userprofile.repositories.BlockedSetRepository;
+import in.dailyhunt.internship.userprofile.repositories.*;
 import in.dailyhunt.internship.userprofile.services.interfaces.BlockedService;
 import in.dailyhunt.internship.userprofile.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,23 @@ import java.util.stream.Stream;
 @Service
 public class BlockedServiceImpl implements BlockedService {
 
-    private BlockedSetRepository blockedSetRepository;
+    private final BlockedSetRepository blockedSetRepository;
+    private final GenreDataRepository genreDataRepository;
+    private final LanguageDataRepository languageDataRepository;
+    private final LocalityDataRepository localityDataRepository;
+    private final TagDataRepository tagDataRepository;
 
     @Autowired
-    public BlockedServiceImpl(BlockedSetRepository blockedSetRepository){
-
+    public BlockedServiceImpl(BlockedSetRepository blockedSetRepository,
+                              GenreDataRepository genreDataRepository,
+                              LanguageDataRepository languageDataRepository,
+                              LocalityDataRepository localityDataRepository,
+                              TagDataRepository tagDataRepository){
         this.blockedSetRepository = blockedSetRepository;
+        this.genreDataRepository = genreDataRepository;
+        this.languageDataRepository = languageDataRepository;
+        this.localityDataRepository = localityDataRepository;
+        this.tagDataRepository = tagDataRepository;
     }
     @Override
     @Transactional
@@ -32,44 +42,48 @@ public class BlockedServiceImpl implements BlockedService {
         Optional<BlockedSet> optional = blockedSetRepository.findById(preferenceRequest.getUserId());
         if(optional.isPresent()){
             BlockedSet blockedSet = optional.get();
-            List<Long> genres = blockedSet.getGenreIds();
-            List<Long> languages = blockedSet.getLanguageIds();
-            List<Long> localities = blockedSet.getLocalityIds();
-            List<Long> tags = blockedSet.getTagIds();
+            List<GenreData> genreData = blockedSet.getGenreData();
+            List<LanguageData> languageData = blockedSet.getLanguageData();
+            List<LocalityData> localityData = blockedSet.getLocalityData();
+            List<TagData> tagData = blockedSet.getTagData();
             if(preferenceRequest.getGenreIds() != null)
-                genres = Stream.of(genres, preferenceRequest.getGenreIds())
+                genreData = Stream.of(genreData, genreDataRepository.findAllById(
+                        preferenceRequest.getGenreIds()))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList());
 
             if(preferenceRequest.getLanguageIds() != null)
-                languages = Stream.of(languages, preferenceRequest.getLanguageIds())
+                languageData = Stream.of(languageData, languageDataRepository.findAllById(
+                        preferenceRequest.getLanguageIds()))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList());
 
             if(preferenceRequest.getLocalityIds() != null)
-                localities = Stream.of(localities, preferenceRequest.getLocalityIds())
+                localityData = Stream.of(localityData, localityDataRepository.findAllById(
+                        preferenceRequest.getLocalityIds()))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList());
 
             if(preferenceRequest.getTagIds() != null)
-                tags = Stream.of(tags, preferenceRequest.getTagIds())
+                tagData = Stream.of(tagData, tagDataRepository.findAllById(
+                        preferenceRequest.getTagIds()))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList());
             blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
-                    .genreIds(genres)
-                    .languageIds(languages)
-                    .localityIds(localities)
-                    .tagIds(tags)
+                    .genreData(genreData)
+                    .languageData(languageData)
+                    .localityData(localityData)
+                    .tagData(tagData)
                     .build());
         }
         else {
             blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
-                    .genreIds(preferenceRequest.getGenreIds())
-                    .languageIds(preferenceRequest.getLanguageIds())
-                    .localityIds(preferenceRequest.getLocalityIds())
-                    .tagIds(preferenceRequest.getTagIds())
+                    .genreData(genreDataRepository.findAllById(preferenceRequest.getGenreIds()))
+                    .languageData(languageDataRepository.findAllById(preferenceRequest.getLanguageIds()))
+                    .localityData(localityDataRepository.findAllById(preferenceRequest.getLocalityIds()))
+                    .tagData(tagDataRepository.findAllById(preferenceRequest.getTagIds()))
                     .build());
         }
     }
@@ -79,27 +93,27 @@ public class BlockedServiceImpl implements BlockedService {
         Optional<BlockedSet> optional = blockedSetRepository.findById(preferenceRequest.getUserId());
         if(optional.isPresent()){
             BlockedSet blockedSet = optional.get();
-            List<Long> genres = blockedSet.getGenreIds();
-            List<Long> languages = blockedSet.getLanguageIds();
-            List<Long> localities = blockedSet.getLocalityIds();
-            List<Long> tags = blockedSet.getTagIds();
+            List<GenreData> genreData = blockedSet.getGenreData();
+            List<LanguageData> languageData = blockedSet.getLanguageData();
+            List<LocalityData> localityData = blockedSet.getLocalityData();
+            List<TagData> tagData = blockedSet.getTagData();
             if(preferenceRequest.getGenreIds() != null)
-                genres.removeAll(preferenceRequest.getGenreIds());
+                genreData.removeAll(genreDataRepository.findAllById(preferenceRequest.getGenreIds()));
 
             if(preferenceRequest.getLanguageIds() != null)
-                languages.removeAll(preferenceRequest.getLanguageIds());
+                languageData.removeAll(languageDataRepository.findAllById(preferenceRequest.getLanguageIds()));
 
             if(preferenceRequest.getLocalityIds() != null)
-                localities.removeAll(preferenceRequest.getLocalityIds());
+                localityData.removeAll(localityDataRepository.findAllById(preferenceRequest.getLocalityIds()));
 
             if(preferenceRequest.getTagIds() != null)
-                tags.removeAll(preferenceRequest.getTagIds());
+                tagData.removeAll(tagDataRepository.findAllById(preferenceRequest.getTagIds()));
             blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
-                    .genreIds(genres)
-                    .languageIds(languages)
-                    .localityIds(localities)
-                    .tagIds(tags)
+                    .genreData(genreData)
+                    .languageData(languageData)
+                    .localityData(localityData)
+                    .tagData(tagData)
                     .build());
         }
         else

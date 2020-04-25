@@ -6,20 +6,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "APP_LANGUAGES")
-public class Language {
+@Table(name = "LANGUAGEDATA")
+public class LanguageData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NAME", unique = true)
+    @NotNull
+    private Long injestionId;
+
+    @NotBlank
     private String name;
 }

@@ -4,6 +4,7 @@ import in.dailyhunt.internship.userprofile.client_model.response.*;
 import in.dailyhunt.internship.userprofile.entities.BlockedSet;
 import in.dailyhunt.internship.userprofile.entities.FollowingSet;
 import in.dailyhunt.internship.userprofile.entities.User;
+import in.dailyhunt.internship.userprofile.exceptions.BadRequestException;
 import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
 import in.dailyhunt.internship.userprofile.repositories.UserRepository;
 import in.dailyhunt.internship.userprofile.services.interfaces.BlockedService;
@@ -23,14 +24,13 @@ public class HomeServiceImpl implements HomeService {
     private final UserRepository userRepository;
     private final FollowingService followingService;
     private final BlockedService blockedService;
-    private final WebClient.Builder webClientBuilder;
+//    private final WebClient.Builder webClientBuilder;
 
     public HomeServiceImpl(UserRepository userRepository, FollowingService followingService,
-                           BlockedService blockedService, WebClient.Builder webClientBuilder){
+                           BlockedService blockedService){
         this.userRepository = userRepository;
         this.followingService = followingService;
         this.blockedService = blockedService;
-        this.webClientBuilder = webClientBuilder;
     }
 
     @Override
@@ -54,55 +54,21 @@ public class HomeServiceImpl implements HomeService {
         }
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userid);
         if(!optional_following.isPresent()){
-            return null;
+            throw new BadRequestException("users following list is empty");
+
         }
         else{
             FollowingSet followingSet = optional_following.get();
-            List<Long> genreIds = followingSet.getGenreIds();
-    //        System.out.println("GENREID SIZE: "+genreIds.size());
-    //        System.out.println("GenreId 1: "+genreIds.get(0));
-    //        System.out.println("GenreId 2: "+genreIds.get(1));
-            List<Long> languageIds = followingSet.getLanguageIds();
-            List<Long> localityIds = followingSet.getLocalityIds();
-            List<Long> tagIds = followingSet.getTagIds();
 
-            String genreUrl = "http://localhost:8081/api/v1/genre/genreIds";
-            AllGenres allGenres = webClientBuilder.build()
-                    .post()
-                    .uri(genreUrl)
-                    .body(Mono.just(GenreIdList.builder().genreIds(genreIds).build()), GenreIdList.class)
-                    .retrieve()
-                    .bodyToMono(AllGenres.class)
-                    .block();
-            String languageUrl = "http://localhost:8081/api/v1/language/languageIds";
-            AllLanguages allLanguages = webClientBuilder.build()
-                    .post()
-                    .uri(languageUrl)
-                    .body(Mono.just(LanguageIdList.builder().languageIds(languageIds).build()), LanguageIdList.class)
-                    .retrieve()
-                    .bodyToMono(AllLanguages.class)
-                    .block();
-            String localityUrl = "http://localhost:8081/api/v1/locality/localityIds";
-            AllLocalities allLocalities = webClientBuilder.build()
-                    .post()
-                    .uri(localityUrl)
-                    .body(Mono.just(LocalityIdList.builder().localityIds(localityIds).build()), LocalityIdList.class)
-                    .retrieve()
-                    .bodyToMono(AllLocalities.class)
-                    .block();
-            String tagUrl = "http://localhost:8081/api/v1/tag/tagIds";
-            AllTags allTags = webClientBuilder.build()
-                    .post()
-                    .uri(tagUrl)
-                    .body(Mono.just(TagIdList.builder().tagIds(tagIds).build()), TagIdList.class)
-                    .retrieve()
-                    .bodyToMono(AllTags.class)
-                    .block();
             return PreferenceResponse.builder()
-                    .genres(allGenres)
-                    .languages(allLanguages)
-                    .localities(allLocalities)
-                    .tags(allTags)
+                    .genres(AllGenres.builder()
+                            .all_the_genres(followingSet.getGenreData()).build())
+                    .languages(AllLanguages.builder()
+                            .all_the_languages(followingSet.getLanguageData()).build())
+                    .localities(AllLocalities.builder()
+                            .all_the_localities(followingSet.getLocalityData()).build())
+                    .tags(AllTags.builder()
+                            .all_the_tags(followingSet.getTagData()).build())
                     .build();
         }
     }
@@ -118,52 +84,19 @@ public class HomeServiceImpl implements HomeService {
 
         Optional<BlockedSet> optional_blocked = blockedService.getBlockedSet(userid);
         if(!optional_blocked.isPresent()){
-            return null;
+            throw new BadRequestException("users following list is empty");
         }
         else{
-            BlockedSet blocked = optional_blocked.get();
-            List<Long> genreIds = blocked.getGenreIds();
-            List<Long> languageIds = blocked.getLanguageIds();
-            List<Long> localityIds = blocked.getLocalityIds();
-            List<Long> tagIds = blocked.getTagIds();
-
-            String genreUrl = "http://localhost:8081/api/v1/genre/genreIds";
-            AllGenres allGenres = webClientBuilder.build()
-                    .post()
-                    .uri(genreUrl)
-                    .body(Mono.just(GenreIdList.builder().genreIds(genreIds).build()), GenreIdList.class)
-                    .retrieve()
-                    .bodyToMono(AllGenres.class)
-                    .block();
-            String languageUrl = "http://localhost:8081/api/v1/language/languageIds";
-            AllLanguages allLanguages = webClientBuilder.build()
-                    .post()
-                    .uri(languageUrl)
-                    .body(Mono.just(LanguageIdList.builder().languageIds(languageIds).build()), LanguageIdList.class)
-                    .retrieve()
-                    .bodyToMono(AllLanguages.class)
-                    .block();
-            String localityUrl = "http://localhost:8081/api/v1/locality/localityIds";
-            AllLocalities allLocalities = webClientBuilder.build()
-                    .post()
-                    .uri(localityUrl)
-                    .body(Mono.just(LocalityIdList.builder().localityIds(localityIds).build()), LocalityIdList.class)
-                    .retrieve()
-                    .bodyToMono(AllLocalities.class)
-                    .block();
-            String tagUrl = "http://localhost:8081/api/v1/tag/tagIds";
-            AllTags allTags = webClientBuilder.build()
-                    .post()
-                    .uri(tagUrl)
-                    .body(Mono.just(TagIdList.builder().tagIds(tagIds).build()), TagIdList.class)
-                    .retrieve()
-                    .bodyToMono(AllTags.class)
-                    .block();
+            BlockedSet blockedSet = optional_blocked.get();
             return PreferenceResponse.builder()
-                    .genres(allGenres)
-                    .languages(allLanguages)
-                    .localities(allLocalities)
-                    .tags(allTags)
+                    .genres(AllGenres.builder()
+                            .all_the_genres(blockedSet.getGenreData()).build())
+                    .languages(AllLanguages.builder()
+                            .all_the_languages(blockedSet.getLanguageData()).build())
+                    .localities(AllLocalities.builder()
+                            .all_the_localities(blockedSet.getLocalityData()).build())
+                    .tags(AllTags.builder()
+                            .all_the_tags(blockedSet.getTagData()).build())
                     .build();
         }
     }
