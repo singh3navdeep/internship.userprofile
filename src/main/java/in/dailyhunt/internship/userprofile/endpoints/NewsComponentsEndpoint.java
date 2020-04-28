@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping(NewsComponentsEndpoint.BASE_URL)
 public class NewsComponentsEndpoint {
-    static final String BASE_URL = "api/v1/user_profile/newsComponents";
+    static final String BASE_URL = "api/v1/injestion/user_profile/newsComponents";
 
  //   private final WebClient.Builder webclientBuilder;
 
