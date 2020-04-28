@@ -55,6 +55,7 @@ public class User {
     @JoinTable(name = "USER_GENDER_MAPPING",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "GENDER_ID"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Gender gender;
 
     @Column(name = "DATE_OF_BIRTH")
@@ -64,6 +65,7 @@ public class User {
     @JoinTable(name = "USER_NEWS_LANGUAGE_MAPPING",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "LANGUAGE_ID"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Language news_language;
 
 
