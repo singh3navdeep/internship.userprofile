@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@NoArgsConstructor
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(LanguageEndpoint.BASE_URL)
 public class LanguageEndpoint {
     static final String BASE_URL = "api/v1/language_profile";
 
-    private LanguageService languageService;
+    private final LanguageService languageService;
 
     @Autowired
     public LanguageEndpoint(LanguageService languageService){

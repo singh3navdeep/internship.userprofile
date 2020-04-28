@@ -12,6 +12,7 @@ import in.dailyhunt.internship.userprofile.services.interfaces.BlockedService;
 import in.dailyhunt.internship.userprofile.services.interfaces.FollowingService;
 import in.dailyhunt.internship.userprofile.services.interfaces.LanguageService;
 import in.dailyhunt.internship.userprofile.services.interfaces.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,18 +24,18 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-  //  private PasswordEncoder passwordEncoder;
-    private LanguageService languageService;
-    private GenderRepository genderRepository;
-    private FollowingService followingService;
-    private BlockedService blockedService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final LanguageService languageService;
+    private final GenderRepository genderRepository;
+    private final FollowingService followingService;
+    private final BlockedService blockedService;
 
-    public UserServiceImpl(UserRepository userRepository, LanguageService languageService,
-                           GenderRepository genderRepository, FollowingService followingService,
-                           BlockedService blockedService){
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                           LanguageService languageService, GenderRepository genderRepository,
+                           FollowingService followingService, BlockedService blockedService){
         this.userRepository = userRepository;
-    //    this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = passwordEncoder;
         this.languageService = languageService;
         this.genderRepository = genderRepository;
         this.followingService = followingService;
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         User user = User.builder()
                 .name(signUpForm.getName())
-                .password(signUpForm.getPassword())
+                .password(passwordEncoder.encode(signUpForm.getPassword()))
                 .email(signUpForm.getEmail())
                 .date_of_birth(signUpForm.getDate_of_birth())
                 .username(signUpForm.getUsername())

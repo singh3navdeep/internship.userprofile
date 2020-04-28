@@ -20,6 +20,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(NewsComponentsEndpoint.BASE_URL)
 public class NewsComponentsEndpoint {

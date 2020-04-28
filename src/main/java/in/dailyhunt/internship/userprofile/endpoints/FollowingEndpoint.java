@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@NoArgsConstructor
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(FollowingEndpoint.BASE_URL)
 public class FollowingEndpoint {
     static final String BASE_URL = "api/v1/user_profile/following";
 
 
-    private FollowingService followingService;
+    private final FollowingService followingService;
 
     @Autowired
     public FollowingEndpoint(FollowingService followingService){

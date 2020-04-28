@@ -5,18 +5,15 @@ import in.dailyhunt.internship.userprofile.services.interfaces.HomeService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@NoArgsConstructor
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(HomeEndpoint.HOME_BASE_URL)
 public class HomeEndpoint {
     static final String HOME_BASE_URL = "api/v1/home_profile";
 
-    private HomeService homeService;
+    private final HomeService homeService;
 
     @Autowired
     public HomeEndpoint(HomeService homeService){

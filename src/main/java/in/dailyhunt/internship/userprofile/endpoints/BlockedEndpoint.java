@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
-@NoArgsConstructor
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(BlockedEndpoint.BASE_URL)
 public class BlockedEndpoint {
     static final String BASE_URL = "api/v1/user_profile/blocked";
 
-    private BlockedService blockedService;
+    private final BlockedService blockedService;
 
     @Autowired
     public BlockedEndpoint(BlockedService blockedService){
