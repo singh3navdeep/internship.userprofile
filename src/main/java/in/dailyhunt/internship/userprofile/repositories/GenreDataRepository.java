@@ -3,6 +3,8 @@ package in.dailyhunt.internship.userprofile.repositories;
 import in.dailyhunt.internship.userprofile.entities.GenreData;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface GenreDataRepository extends JpaRepository<GenreData, Long> {
-    GenreData findByInjestionId(Long id);
+    Optional<GenreData> findByInjestionId(Long id);
 }

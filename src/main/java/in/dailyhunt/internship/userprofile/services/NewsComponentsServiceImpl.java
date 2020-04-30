@@ -9,26 +9,22 @@ import in.dailyhunt.internship.userprofile.entities.GenreData;
 import in.dailyhunt.internship.userprofile.entities.LanguageData;
 import in.dailyhunt.internship.userprofile.entities.LocalityData;
 import in.dailyhunt.internship.userprofile.entities.TagData;
+import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
 import in.dailyhunt.internship.userprofile.repositories.GenreDataRepository;
 import in.dailyhunt.internship.userprofile.repositories.LanguageDataRepository;
 import in.dailyhunt.internship.userprofile.repositories.LocalityDataRepository;
 import in.dailyhunt.internship.userprofile.repositories.TagDataRepository;
 import in.dailyhunt.internship.userprofile.services.interfaces.NewsComponentsService;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
-import org.springframework.web.HttpRequestHandler;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-import java.util.List;
+import javax.swing.text.html.HTML;
+import java.util.Optional;
+
 
 @Service
 public class NewsComponentsServiceImpl implements NewsComponentsService {
 
-    /*@LoadBalanced
-    private final WebClient.Builder webClientBuilder;
-*/
     private final GenreDataRepository genreDataRepository;
     private final LanguageDataRepository languageDataRepository;
     private final LocalityDataRepository localityDataRepository;
@@ -46,14 +42,7 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
 
     @Override
     public AllGenres getAllGenres() {
-    /*    String genreUrl = "http://localhost:8081/api/v1/genre";
-        return webClientBuilder.build()
-                .get()
-                .uri(genreUrl)
-                .retrieve()
-                .bodyToMono(AllGenres.class)
-                .block();
-    */
+
         return AllGenres.builder()
                 .all_the_genres(genreDataRepository.findAll())
                 .build();
@@ -68,18 +57,19 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
     }
 
     public void deleteGenre(Long id) {
-        genreDataRepository.delete(genreDataRepository.findByInjestionId(id));
+        Optional<GenreData> optionalGenreData = genreDataRepository.findByInjestionId(id);
+        if(optionalGenreData.isPresent()) {
+            GenreData genreData = optionalGenreData.get();
+            genreDataRepository.delete(genreData);
+        }
+        else {
+            throw new ResourceNotFoundException("genre data not found");
+        }
     }
+
     @Override
     public AllLanguages getAllLanguages() {
-    /*    String languageUrl = "http://localhost:8081/api/v1/language";
-        return webClientBuilder.build()
-                .get()
-                .uri(languageUrl)
-                .retrieve()
-                .bodyToMono(AllLanguages.class)
-                .block();
-    */
+
         return AllLanguages.builder()
                 .all_the_languages(languageDataRepository.findAll())
                 .build();
@@ -93,19 +83,19 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
                 .build());
     }
     public void deleteLanguage(Long id) {
-        languageDataRepository.delete(languageDataRepository.findByInjestionId(id));
+        Optional<LanguageData> optionalLanguageData = languageDataRepository.findByInjestionId(id);
+        if(optionalLanguageData.isPresent()) {
+            LanguageData languageData = optionalLanguageData.get();
+            languageDataRepository.delete(languageData);
+        }
+        else {
+            throw new ResourceNotFoundException("language not found");
+        }
     }
 
     @Override
     public AllLocalities getAllLocalities() {
-    /*      String localityUrl = "http://localhost:8081/api/v1/locality";
-        return webClientBuilder.build()
-                .get()
-                .uri(localityUrl)
-                .retrieve()
-                .bodyToMono(AllLocalities.class)
-                .block();
-    */
+
         return AllLocalities.builder()
                 .all_the_localities(localityDataRepository.findAll())
                 .build();
@@ -119,19 +109,19 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
                 .build());
     }
     public void deleteLocality(Long id) {
-        localityDataRepository.delete(localityDataRepository.findByInjestionId(id));
+        Optional<LocalityData> optionalLocalityData = localityDataRepository.findByInjestionId(id);
+        if(optionalLocalityData.isPresent()) {
+            LocalityData localityData = optionalLocalityData.get();
+            localityDataRepository.delete(localityData);
+        }
+        else {
+            throw new ResourceNotFoundException("locality not found");
+        }
     }
 
     @Override
     public AllTags getAllTags() {
-    /*        String tagUrl = "http://localhost:8081/api/v1/tag";
-        return webClientBuilder.build()
-                .get()
-                .uri(tagUrl)
-                .retrieve()
-                .bodyToMono(AllTags.class)
-                .block();
-    */
+
         return AllTags.builder()
                 .all_the_tags(tagDataRepository.findAll())
                 .build();
@@ -145,7 +135,14 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
                 .build());
     }
     public void deleteTag(Long id) {
-        tagDataRepository.delete(tagDataRepository.findByInjestionId(id));
+        Optional<TagData> optionalTagData = tagDataRepository.findByInjestionId(id);
+        if(optionalTagData.isPresent()) {
+            TagData tagData = optionalTagData.get();
+            tagDataRepository.delete(tagData);
+        }
+        else {
+            throw new ResourceNotFoundException("tag not found");
+        }
     }
 
 }
