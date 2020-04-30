@@ -49,24 +49,24 @@ public class FollowingServiceImpl implements FollowingService {
              List<LanguageData> languageData = followingSet.getLanguageData();
              List<LocalityData> localityData = followingSet.getLocalityData();
              List<TagData> tagData = followingSet.getTagData();
-             if(preferenceRequest.getGenreIds() != null)
+             if(!preferenceRequest.getGenreIds().isEmpty())
                  genreData = Stream.of(genreData, genreDataRepository.findAllById(preferenceRequest.getGenreIds()))
                          .flatMap(Collection::stream)
                          .collect(Collectors.toList());
 
-             if(preferenceRequest.getLanguageIds() != null)
+             if(!preferenceRequest.getLanguageIds().isEmpty())
                  languageData = Stream.of(languageData, languageDataRepository.findAllById(
                          preferenceRequest.getLanguageIds()))
                          .flatMap(Collection::stream)
                          .collect(Collectors.toList());
 
-             if(preferenceRequest.getLocalityIds() != null)
+             if(!preferenceRequest.getLocalityIds().isEmpty())
                  localityData = Stream.of(localityData, localityDataRepository.findAllById(
                          preferenceRequest.getLocalityIds()))
                          .flatMap(Collection::stream)
                          .collect(Collectors.toList());
 
-             if(preferenceRequest.getTagIds() != null)
+             if(!preferenceRequest.getTagIds().isEmpty())
                  tagData = Stream.of(tagData, tagDataRepository.findAllById(
                          preferenceRequest.getTagIds()))
                          .flatMap(Collection::stream)

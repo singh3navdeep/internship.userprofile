@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Builder
@@ -38,21 +39,21 @@ public class SignUpForm {
     private String password;
 
 
-    private List<Long> following_genres;
+    private Optional<List<Long>> following_genres;
 
-    private List<Long> following_languages;
+    private Optional<List<Long>> following_languages;
 
-    private List<Long> following_localities;
+    private Optional<List<Long>> following_localities;
 
-    private List<Long> following_tags;
+    private Optional<List<Long>> following_tags;
 
-    private List<Long> blocked_genres;
+    private Optional<List<Long>> blocked_genres;
 
-    private List<Long> blocked_languages;
+    private Optional<List<Long>> blocked_languages;
 
-    private List<Long> blocked_localities;
+    private Optional<List<Long>> blocked_localities;
 
-    private List<Long> blocked_tags;
+    private Optional<List<Long>> blocked_tags;
 
 
 

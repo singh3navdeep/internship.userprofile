@@ -16,10 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -102,17 +99,17 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         followingService.addFollowing(PreferenceRequest.builder()
                         .userId(user.getId())
-                        .genreIds(signUpForm.getFollowing_genres())
-                        .languageIds(signUpForm.getFollowing_languages())
-                        .localityIds(signUpForm.getFollowing_localities())
-                        .tagIds(signUpForm.getFollowing_tags())
+                        .genreIds(signUpForm.getFollowing_genres().orElse(Collections.emptyList()))
+                        .languageIds(signUpForm.getFollowing_languages().orElse(Collections.emptyList()))
+                        .localityIds(signUpForm.getFollowing_localities().orElse(Collections.emptyList()))
+                        .tagIds(signUpForm.getFollowing_tags().orElse(Collections.emptyList()))
                         .build());
         blockedService.addBlocked(PreferenceRequest.builder()
                 .userId(user.getId())
-                .genreIds(signUpForm.getBlocked_genres())
-                .languageIds(signUpForm.getBlocked_languages())
-                .localityIds(signUpForm.getBlocked_localities())
-                .tagIds(signUpForm.getBlocked_tags())
+                .genreIds(signUpForm.getBlocked_genres().orElse(Collections.emptyList()))
+                .languageIds(signUpForm.getBlocked_languages().orElse(Collections.emptyList()))
+                .localityIds(signUpForm.getBlocked_localities().orElse(Collections.emptyList()))
+                .tagIds(signUpForm.getBlocked_tags().orElse(Collections.emptyList()))
                 .build());
         return user;
     }
