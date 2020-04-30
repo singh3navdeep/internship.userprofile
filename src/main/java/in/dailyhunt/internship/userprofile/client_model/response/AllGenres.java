@@ -4,10 +4,10 @@ import in.dailyhunt.internship.userprofile.entities.GenreData;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
 public class AllGenres {
-    private List<GenreData> all_the_genres;
+    private Set<GenreData> all_the_genres;
 }

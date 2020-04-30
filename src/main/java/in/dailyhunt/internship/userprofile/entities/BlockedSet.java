@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,27 +28,27 @@ public class BlockedSet {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<GenreData> genreData;
+    private Set<GenreData> genreData;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_blocked_languages",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<LanguageData> languageData;
+    private Set<LanguageData> languageData;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_blocked_localities",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "locality_id"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<LocalityData> localityData;
+    private Set<LocalityData> localityData;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_blocked_tags",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<TagData> tagData;
+    private Set<TagData> tagData;
 
 }

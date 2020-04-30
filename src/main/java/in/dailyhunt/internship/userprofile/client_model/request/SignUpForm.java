@@ -39,21 +39,21 @@ public class SignUpForm {
     private String password;
 
 
-    private Optional<List<Long>> following_genres;
+    private Optional<Set<Long>> following_genres;
 
-    private Optional<List<Long>> following_languages;
+    private Optional<Set<Long>> following_languages;
 
-    private Optional<List<Long>> following_localities;
+    private Optional<Set<Long>> following_localities;
 
-    private Optional<List<Long>> following_tags;
+    private Optional<Set<Long>> following_tags;
 
-    private Optional<List<Long>> blocked_genres;
+    private Optional<Set<Long>> blocked_genres;
 
-    private Optional<List<Long>> blocked_languages;
+    private Optional<Set<Long>> blocked_languages;
 
-    private Optional<List<Long>> blocked_localities;
+    private Optional<Set<Long>> blocked_localities;
 
-    private Optional<List<Long>> blocked_tags;
+    private Optional<Set<Long>> blocked_tags;
 
 
 

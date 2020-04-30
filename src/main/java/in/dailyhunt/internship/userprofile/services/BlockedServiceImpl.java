@@ -9,9 +9,7 @@ import in.dailyhunt.internship.userprofile.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,33 +40,33 @@ public class BlockedServiceImpl implements BlockedService {
         Optional<BlockedSet> optional = blockedSetRepository.findById(preferenceRequest.getUserId());
         if(optional.isPresent()){
             BlockedSet blockedSet = optional.get();
-            List<GenreData> genreData = blockedSet.getGenreData();
-            List<LanguageData> languageData = blockedSet.getLanguageData();
-            List<LocalityData> localityData = blockedSet.getLocalityData();
-            List<TagData> tagData = blockedSet.getTagData();
-            if(!preferenceRequest.getGenreIds().isEmpty())
+            Set<GenreData> genreData = blockedSet.getGenreData();
+            Set<LanguageData> languageData = blockedSet.getLanguageData();
+            Set<LocalityData> localityData = blockedSet.getLocalityData();
+            Set<TagData> tagData = blockedSet.getTagData();
+            if(preferenceRequest.getGenreIds().isPresent())
                 genreData = Stream.of(genreData, genreDataRepository.findAllById(
-                        preferenceRequest.getGenreIds()))
+                        preferenceRequest.getGenreIds().get()))
                         .flatMap(Collection::stream)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toSet());
 
-            if(!preferenceRequest.getLanguageIds().isEmpty())
+            if(preferenceRequest.getLanguageIds().isPresent())
                 languageData = Stream.of(languageData, languageDataRepository.findAllById(
-                        preferenceRequest.getLanguageIds()))
+                        preferenceRequest.getLanguageIds().get()))
                         .flatMap(Collection::stream)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toSet());
 
-            if(!preferenceRequest.getLocalityIds().isEmpty())
+            if(preferenceRequest.getLocalityIds().isPresent())
                 localityData = Stream.of(localityData, localityDataRepository.findAllById(
-                        preferenceRequest.getLocalityIds()))
+                        preferenceRequest.getLocalityIds().get()))
                         .flatMap(Collection::stream)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toSet());
 
-            if(!preferenceRequest.getTagIds().isEmpty())
+            if(preferenceRequest.getTagIds().isPresent())
                 tagData = Stream.of(tagData, tagDataRepository.findAllById(
-                        preferenceRequest.getTagIds()))
+                        preferenceRequest.getTagIds().get()))
                         .flatMap(Collection::stream)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toSet());
             blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
                     .genreData(genreData)
@@ -80,10 +78,18 @@ public class BlockedServiceImpl implements BlockedService {
         else {
             blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
-                    .genreData(genreDataRepository.findAllById(preferenceRequest.getGenreIds()))
-                    .languageData(languageDataRepository.findAllById(preferenceRequest.getLanguageIds()))
-                    .localityData(localityDataRepository.findAllById(preferenceRequest.getLocalityIds()))
-                    .tagData(tagDataRepository.findAllById(preferenceRequest.getTagIds()))
+                    .genreData(new HashSet<>(genreDataRepository
+                            .findAllById(preferenceRequest.getGenreIds()
+                            .orElse(Collections.emptySet()))))
+                    .languageData(new HashSet<>(languageDataRepository
+                            .findAllById(preferenceRequest.getLanguageIds()
+                                    .orElse(Collections.emptySet()))))
+                    .localityData(new HashSet<>(localityDataRepository
+                            .findAllById(preferenceRequest.getLocalityIds()
+                                    .orElse(Collections.emptySet()))))
+                    .tagData(new HashSet<>(tagDataRepository
+                            .findAllById(preferenceRequest.getTagIds()
+                                    .orElse(Collections.emptySet()))))
                     .build());
         }
     }
@@ -93,21 +99,25 @@ public class BlockedServiceImpl implements BlockedService {
         Optional<BlockedSet> optional = blockedSetRepository.findById(preferenceRequest.getUserId());
         if(optional.isPresent()){
             BlockedSet blockedSet = optional.get();
-            List<GenreData> genreData = blockedSet.getGenreData();
-            List<LanguageData> languageData = blockedSet.getLanguageData();
-            List<LocalityData> localityData = blockedSet.getLocalityData();
-            List<TagData> tagData = blockedSet.getTagData();
-            if(preferenceRequest.getGenreIds() != null)
-                genreData.removeAll(genreDataRepository.findAllById(preferenceRequest.getGenreIds()));
+            Set<GenreData> genreData = blockedSet.getGenreData();
+            Set<LanguageData> languageData = blockedSet.getLanguageData();
+            Set<LocalityData> localityData = blockedSet.getLocalityData();
+            Set<TagData> tagData = blockedSet.getTagData();
+            if(preferenceRequest.getGenreIds().isPresent())
+                genreData.removeAll(genreDataRepository
+                        .findAllById(preferenceRequest.getGenreIds().get()));
 
-            if(preferenceRequest.getLanguageIds() != null)
-                languageData.removeAll(languageDataRepository.findAllById(preferenceRequest.getLanguageIds()));
+            if(preferenceRequest.getLanguageIds().isPresent())
+                languageData.removeAll(languageDataRepository
+                        .findAllById(preferenceRequest.getLanguageIds().get()));
 
-            if(preferenceRequest.getLocalityIds() != null)
-                localityData.removeAll(localityDataRepository.findAllById(preferenceRequest.getLocalityIds()));
+            if(preferenceRequest.getLocalityIds().isPresent())
+                localityData.removeAll(localityDataRepository
+                        .findAllById(preferenceRequest.getLocalityIds().get()));
 
-            if(preferenceRequest.getTagIds() != null)
-                tagData.removeAll(tagDataRepository.findAllById(preferenceRequest.getTagIds()));
+            if(preferenceRequest.getTagIds().isPresent())
+                tagData.removeAll(tagDataRepository
+                        .findAllById(preferenceRequest.getTagIds().get()));
             blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
                     .genreData(genreData)

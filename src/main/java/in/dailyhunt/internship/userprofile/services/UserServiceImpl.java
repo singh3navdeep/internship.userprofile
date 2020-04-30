@@ -99,17 +99,17 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         followingService.addFollowing(PreferenceRequest.builder()
                         .userId(user.getId())
-                        .genreIds(signUpForm.getFollowing_genres().orElse(Collections.emptyList()))
-                        .languageIds(signUpForm.getFollowing_languages().orElse(Collections.emptyList()))
-                        .localityIds(signUpForm.getFollowing_localities().orElse(Collections.emptyList()))
-                        .tagIds(signUpForm.getFollowing_tags().orElse(Collections.emptyList()))
+                        .genreIds(signUpForm.getFollowing_genres())
+                        .languageIds(signUpForm.getFollowing_languages())
+                        .localityIds(signUpForm.getFollowing_localities())
+                        .tagIds(signUpForm.getFollowing_tags())
                         .build());
         blockedService.addBlocked(PreferenceRequest.builder()
                 .userId(user.getId())
-                .genreIds(signUpForm.getBlocked_genres().orElse(Collections.emptyList()))
-                .languageIds(signUpForm.getBlocked_languages().orElse(Collections.emptyList()))
-                .localityIds(signUpForm.getBlocked_localities().orElse(Collections.emptyList()))
-                .tagIds(signUpForm.getBlocked_tags().orElse(Collections.emptyList()))
+                .genreIds(signUpForm.getBlocked_genres())
+                .languageIds(signUpForm.getBlocked_languages())
+                .localityIds(signUpForm.getBlocked_localities())
+                .tagIds(signUpForm.getBlocked_tags())
                 .build());
         return user;
     }

@@ -5,9 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
 public class AllLanguages {
-    private List<LanguageData> all_the_languages;
+    private Set<LanguageData> all_the_languages;
 }

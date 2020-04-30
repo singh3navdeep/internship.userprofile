@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.HTML;
+import java.util.HashSet;
 import java.util.Optional;
 
 
@@ -44,7 +45,7 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
     public AllGenres getAllGenres() {
 
         return AllGenres.builder()
-                .all_the_genres(genreDataRepository.findAll())
+                .all_the_genres(new HashSet<>(genreDataRepository.findAll()))
                 .build();
     }
 
@@ -71,7 +72,7 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
     public AllLanguages getAllLanguages() {
 
         return AllLanguages.builder()
-                .all_the_languages(languageDataRepository.findAll())
+                .all_the_languages(new HashSet<>(languageDataRepository.findAll()))
                 .build();
     }
 
@@ -97,7 +98,7 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
     public AllLocalities getAllLocalities() {
 
         return AllLocalities.builder()
-                .all_the_localities(localityDataRepository.findAll())
+                .all_the_localities(new HashSet<>(localityDataRepository.findAll()))
                 .build();
     }
 
@@ -123,7 +124,7 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
     public AllTags getAllTags() {
 
         return AllTags.builder()
-                .all_the_tags(tagDataRepository.findAll())
+                .all_the_tags(new HashSet<>(tagDataRepository.findAll()))
                 .build();
     }
 

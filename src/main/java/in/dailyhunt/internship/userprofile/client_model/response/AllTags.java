@@ -5,9 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
 public class AllTags {
-    private List<TagData> all_the_tags;
+    private Set<TagData> all_the_tags;
 }
