@@ -49,25 +49,25 @@ public class FollowingServiceImpl implements FollowingService {
              Set<TagData> tagData = followingSet.getTagData();
              if(preferenceRequest.getGenreIds().isPresent())
                  genreData = Stream.of(genreData, genreDataRepository
-                         .findAllById(preferenceRequest.getGenreIds().get()))
+                         .findAllByInjestionId(preferenceRequest.getGenreIds().get()))
                          .flatMap(Collection::stream)
                          .collect(Collectors.toSet());
 
              if(preferenceRequest.getLanguageIds().isPresent())
                  languageData = Stream.of(languageData, languageDataRepository
-                         .findAllById(preferenceRequest.getLanguageIds().get()))
+                         .findAllByInjestionId(preferenceRequest.getLanguageIds().get()))
                          .flatMap(Collection::stream)
                          .collect(Collectors.toSet());
 
              if(preferenceRequest.getLocalityIds().isPresent())
                  localityData = Stream.of(localityData, localityDataRepository
-                         .findAllById(preferenceRequest.getLocalityIds().get()))
+                         .findAllByInjestionId(preferenceRequest.getLocalityIds().get()))
                          .flatMap(Collection::stream)
                          .collect(Collectors.toSet());
 
              if(preferenceRequest.getTagIds().isPresent())
                  tagData = Stream.of(tagData, tagDataRepository
-                         .findAllById(preferenceRequest.getTagIds().get()))
+                         .findAllByInjestionId(preferenceRequest.getTagIds().get()))
                          .flatMap(Collection::stream)
                          .collect(Collectors.toSet());
              followingSetRepository.save(FollowingSet.builder()
@@ -82,16 +82,16 @@ public class FollowingServiceImpl implements FollowingService {
              followingSetRepository.save(FollowingSet.builder()
                      .userId(preferenceRequest.getUserId())
                      .genreData(new HashSet<>(genreDataRepository
-                             .findAllById(preferenceRequest.getGenreIds()
+                             .findAllByInjestionId(preferenceRequest.getGenreIds()
                              .orElse(Collections.emptySet()))))
                      .languageData(new HashSet<>(languageDataRepository
-                             .findAllById(preferenceRequest.getLanguageIds()
+                             .findAllByInjestionId(preferenceRequest.getLanguageIds()
                              .orElse(Collections.emptySet()))))
                      .localityData(new HashSet<>(localityDataRepository
-                             .findAllById(preferenceRequest.getLocalityIds()
+                             .findAllByInjestionId(preferenceRequest.getLocalityIds()
                              .orElse(Collections.emptySet()))))
                      .tagData(new HashSet<>(tagDataRepository
-                             .findAllById(preferenceRequest.getTagIds()
+                             .findAllByInjestionId(preferenceRequest.getTagIds()
                              .orElse(Collections.emptySet()))))
                      .build());
          }
@@ -108,19 +108,19 @@ public class FollowingServiceImpl implements FollowingService {
             Set<LocalityData> localityData = followingSet.getLocalityData();
             Set<TagData> tagData = followingSet.getTagData();
             if(preferenceRequest.getGenreIds().isPresent())
-                genreData.removeAll(genreDataRepository.findAllById(
+                genreData.removeAll(genreDataRepository.findAllByInjestionId(
                         preferenceRequest.getGenreIds().get()));
 
             if(preferenceRequest.getLanguageIds().isPresent())
-                languageData.removeAll(languageDataRepository.findAllById(
+                languageData.removeAll(languageDataRepository.findAllByInjestionId(
                         preferenceRequest.getLanguageIds().get()));
 
             if(preferenceRequest.getLocalityIds().isPresent())
-                localityData.removeAll(localityDataRepository.findAllById(
+                localityData.removeAll(localityDataRepository.findAllByInjestionId(
                         preferenceRequest.getLocalityIds().get()));
 
             if(preferenceRequest.getTagIds().isPresent())
-                tagData.removeAll(tagDataRepository.findAllById(
+                tagData.removeAll(tagDataRepository.findAllByInjestionId(
                         preferenceRequest.getTagIds().get()));
             followingSetRepository.save(FollowingSet.builder()
                     .userId(preferenceRequest.getUserId())

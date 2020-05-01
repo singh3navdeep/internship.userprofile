@@ -45,25 +45,25 @@ public class BlockedServiceImpl implements BlockedService {
             Set<LocalityData> localityData = blockedSet.getLocalityData();
             Set<TagData> tagData = blockedSet.getTagData();
             if(preferenceRequest.getGenreIds().isPresent())
-                genreData = Stream.of(genreData, genreDataRepository.findAllById(
+                genreData = Stream.of(genreData, genreDataRepository.findAllByInjestionId(
                         preferenceRequest.getGenreIds().get()))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toSet());
 
             if(preferenceRequest.getLanguageIds().isPresent())
-                languageData = Stream.of(languageData, languageDataRepository.findAllById(
+                languageData = Stream.of(languageData, languageDataRepository.findAllByInjestionId(
                         preferenceRequest.getLanguageIds().get()))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toSet());
 
             if(preferenceRequest.getLocalityIds().isPresent())
-                localityData = Stream.of(localityData, localityDataRepository.findAllById(
+                localityData = Stream.of(localityData, localityDataRepository.findAllByInjestionId(
                         preferenceRequest.getLocalityIds().get()))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toSet());
 
             if(preferenceRequest.getTagIds().isPresent())
-                tagData = Stream.of(tagData, tagDataRepository.findAllById(
+                tagData = Stream.of(tagData, tagDataRepository.findAllByInjestionId(
                         preferenceRequest.getTagIds().get()))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toSet());
@@ -79,16 +79,16 @@ public class BlockedServiceImpl implements BlockedService {
             blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
                     .genreData(new HashSet<>(genreDataRepository
-                            .findAllById(preferenceRequest.getGenreIds()
+                            .findAllByInjestionId(preferenceRequest.getGenreIds()
                             .orElse(Collections.emptySet()))))
                     .languageData(new HashSet<>(languageDataRepository
-                            .findAllById(preferenceRequest.getLanguageIds()
+                            .findAllByInjestionId(preferenceRequest.getLanguageIds()
                                     .orElse(Collections.emptySet()))))
                     .localityData(new HashSet<>(localityDataRepository
-                            .findAllById(preferenceRequest.getLocalityIds()
+                            .findAllByInjestionId(preferenceRequest.getLocalityIds()
                                     .orElse(Collections.emptySet()))))
                     .tagData(new HashSet<>(tagDataRepository
-                            .findAllById(preferenceRequest.getTagIds()
+                            .findAllByInjestionId(preferenceRequest.getTagIds()
                                     .orElse(Collections.emptySet()))))
                     .build());
         }
@@ -105,19 +105,19 @@ public class BlockedServiceImpl implements BlockedService {
             Set<TagData> tagData = blockedSet.getTagData();
             if(preferenceRequest.getGenreIds().isPresent())
                 genreData.removeAll(genreDataRepository
-                        .findAllById(preferenceRequest.getGenreIds().get()));
+                        .findAllByInjestionId(preferenceRequest.getGenreIds().get()));
 
             if(preferenceRequest.getLanguageIds().isPresent())
                 languageData.removeAll(languageDataRepository
-                        .findAllById(preferenceRequest.getLanguageIds().get()));
+                        .findAllByInjestionId(preferenceRequest.getLanguageIds().get()));
 
             if(preferenceRequest.getLocalityIds().isPresent())
                 localityData.removeAll(localityDataRepository
-                        .findAllById(preferenceRequest.getLocalityIds().get()));
+                        .findAllByInjestionId(preferenceRequest.getLocalityIds().get()));
 
             if(preferenceRequest.getTagIds().isPresent())
                 tagData.removeAll(tagDataRepository
-                        .findAllById(preferenceRequest.getTagIds().get()));
+                        .findAllByInjestionId(preferenceRequest.getTagIds().get()));
             blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
                     .genreData(genreData)
