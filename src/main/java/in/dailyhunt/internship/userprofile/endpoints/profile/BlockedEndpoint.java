@@ -1,4 +1,4 @@
-package in.dailyhunt.internship.userprofile.endpoints;
+package in.dailyhunt.internship.userprofile.endpoints.profile;
 import in.dailyhunt.internship.userprofile.client_model.request.PreferenceRequest;
 import in.dailyhunt.internship.userprofile.services.interfaces.BlockedService;
 import lombok.NoArgsConstructor;
