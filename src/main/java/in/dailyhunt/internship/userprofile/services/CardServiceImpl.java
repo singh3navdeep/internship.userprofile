@@ -60,7 +60,7 @@ public class CardServiceImpl implements CardService {
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
             return CardResponse.builder()
-                    .cards(new ArrayList<>())
+                    .cards(new HashSet<>())
                     .build();
         }
         FilterGenreIds filterGenreIds = FilterGenreIds.builder()
@@ -98,7 +98,7 @@ public class CardServiceImpl implements CardService {
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
             return CardResponse.builder()
-                    .cards(new ArrayList<>())
+                    .cards(new HashSet<>())
                     .build();
         }
         FilterLanguageIds filterLanguageIds = FilterLanguageIds.builder()
@@ -136,7 +136,7 @@ public class CardServiceImpl implements CardService {
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
             return CardResponse.builder()
-                    .cards(new ArrayList<>())
+                    .cards(new HashSet<>())
                     .build();
         }
         FilterLocalityIds filterLocalityIds = FilterLocalityIds.builder()
@@ -174,7 +174,7 @@ public class CardServiceImpl implements CardService {
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
             return CardResponse.builder()
-                    .cards(new ArrayList<>())
+                    .cards(new HashSet<>())
                     .build();
         }
         FilterTagIds filterTagIds = FilterTagIds.builder()
