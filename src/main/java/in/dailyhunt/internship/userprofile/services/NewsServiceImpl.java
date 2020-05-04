@@ -1,6 +1,6 @@
 package in.dailyhunt.internship.userprofile.services;
 
-import in.dailyhunt.internship.userprofile.client_model.response.CardNews;
+import in.dailyhunt.internship.userprofile.client_model.response.Article;
 import in.dailyhunt.internship.userprofile.services.interfaces.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +16,14 @@ public class NewsServiceImpl implements NewsService {
         this.webClientBuilder = webClientBuilder;
     }
 
-    public CardNews getNews(Long id) {
+    public Article getNews(Long id) {
         String newsUrl = "https://dailyhunt-injestion-service.herokuapp.com/api/v1/auth/news";
 
         return webClientBuilder.build()
                 .get()
                 .uri(newsUrl+"/"+id)
                 .retrieve()
-                .bodyToMono(CardNews.class)
+                .bodyToMono(Article.class)
                 .block();
     }
 }

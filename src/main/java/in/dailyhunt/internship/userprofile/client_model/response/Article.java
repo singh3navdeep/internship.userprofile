@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CardNews {
+public class Article {
     private Long id;
 
     private String title;

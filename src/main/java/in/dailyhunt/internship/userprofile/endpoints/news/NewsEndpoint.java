@@ -1,6 +1,6 @@
 package in.dailyhunt.internship.userprofile.endpoints.news;
 
-import in.dailyhunt.internship.userprofile.client_model.response.CardNews;
+import in.dailyhunt.internship.userprofile.client_model.response.Article;
 import in.dailyhunt.internship.userprofile.services.interfaces.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class NewsEndpoint {
     }
 
     @GetMapping("/{injestionId}")
-    ResponseEntity<CardNews> getNews(@PathVariable Long injestionId) {
+    ResponseEntity<Article> getNews(@PathVariable Long injestionId) {
         return ResponseEntity.ok().body(newsService.getNews(injestionId));
     }
 }
