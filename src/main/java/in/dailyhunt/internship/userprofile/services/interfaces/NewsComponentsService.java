@@ -17,6 +17,7 @@ public interface NewsComponentsService {
     AllGenres getAllGenres();
     void addGenre(NewsComponentsRequest newsComponentsRequest);
     void deleteGenre(Long id);
+    void updateGeneric(Long id);
     AllLanguages getAllLanguages();
     void addLanguage(NewsComponentsRequest newsComponentsRequest);
     void deleteLanguage(Long id);

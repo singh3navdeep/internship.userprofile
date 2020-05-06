@@ -53,6 +53,12 @@ public class NewsComponentsEndpoint {
         return ResponseEntity.ok().body("Genre has been deleted successfully");
     }
 
+    @PutMapping("/genre/{id}")
+    public ResponseEntity<String> updateGeneric(@PathVariable Long id) {
+        newsComponentsService.updateGeneric(id);
+        return ResponseEntity.ok().body("Genre generic updated successfully");
+    }
+
     @GetMapping("/languages")
     ResponseEntity<AllLanguages> getAllLanguages() {
         return ResponseEntity.ok().body(newsComponentsService.getAllLanguages());

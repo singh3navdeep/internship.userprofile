@@ -26,4 +26,7 @@ public class GenreData {
 
     @NotBlank
     private String name;
+
+    @Column(columnDefinition = "boolean default false")
+    private Boolean generic;
 }

@@ -69,6 +69,18 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
     }
 
     @Override
+    public void updateGeneric(Long id) {
+        Optional<GenreData> optionalGenreData = genreDataRepository.findByInjestionId(id);
+        if(optionalGenreData.isPresent()) {
+            GenreData genreData = optionalGenreData.get();
+            genreData.setGeneric(!genreData.getGeneric());
+            genreDataRepository.save(genreData);
+        }
+        else
+            throw new ResourceNotFoundException("genre not found");
+    }
+
+    @Override
     public AllLanguages getAllLanguages() {
 
         return AllLanguages.builder()
