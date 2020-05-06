@@ -33,6 +33,11 @@ public class CardsEndpoint {
         return ResponseEntity.ok().body(cardService.getGenreCards());
     }
 
+    @GetMapping("/generic")
+    public ResponseEntity<CardResponse> getGenericCards() {
+        return ResponseEntity.ok().body(cardService.getGenericCards());
+    }
+
     @GetMapping("/language")
     public ResponseEntity<CardResponse> getLanguageCards() {
         return ResponseEntity.ok().body(cardService.getLanguageCards());

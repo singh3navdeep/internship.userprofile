@@ -9,6 +9,8 @@ public interface CardService {
 
     CardResponse getGenreCards();
 
+    CardResponse getGenericCards();
+
     CardResponse getLanguageCards();
 
     CardResponse getLocalityCards();

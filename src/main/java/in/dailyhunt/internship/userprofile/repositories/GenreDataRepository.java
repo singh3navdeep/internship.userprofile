@@ -10,4 +10,5 @@ import java.util.Set;
 public interface GenreDataRepository extends JpaRepository<GenreData, Long> {
     Optional<GenreData> findByInjestionId(Long id);
     List<GenreData> findAllByInjestionIdIn(Set<Long> ids);
+    Set<GenreData> findByGenericTrue();
 }
