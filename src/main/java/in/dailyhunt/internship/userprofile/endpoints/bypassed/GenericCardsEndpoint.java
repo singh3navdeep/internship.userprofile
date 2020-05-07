@@ -26,6 +26,6 @@ public class GenericCardsEndpoint {
     //Get cards with generic genres.
     @GetMapping("/generic")
     public ResponseEntity<CardResponse> getGenericCards() {
-        return ResponseEntity.ok().body(cardService.getGenericCards());
+        return ResponseEntity.ok().body(cardService.getGenericCardsWithoutLogin());
     }
 }

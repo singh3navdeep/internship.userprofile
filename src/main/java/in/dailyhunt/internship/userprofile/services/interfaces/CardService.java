@@ -13,6 +13,8 @@ public interface CardService {
 
     CardResponse getGenericCards();
 
+    CardResponse getGenericCardsWithoutLogin();
+
     CardResponse getLanguagesCards();
 
     CardResponse getLanguageCards(Long langaugeId);

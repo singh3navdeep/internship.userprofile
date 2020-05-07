@@ -40,6 +40,10 @@ public class CardsEndpoint {
         return ResponseEntity.ok().body(cardService.getGenreCards(genreId));
     }
 
+    @GetMapping("/generic")
+    public ResponseEntity<CardResponse> getGenericCards() {
+        return ResponseEntity.ok().body(cardService.getGenericCards());
+    }
 
     //Get cards based on user's following languages.
     @GetMapping("/language")

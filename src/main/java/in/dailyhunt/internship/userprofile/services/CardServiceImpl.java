@@ -62,6 +62,39 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public CardResponse getGenericCardsWithoutLogin() {
+        FilterGenreIds filterGenreIds = FilterGenreIds.builder()
+                .genreIds(genreDataRepository.findByGenericTrue()
+                        .stream()
+                        .map(GenreData::getInjestionId)
+                        .collect(Collectors.toSet()))
+                .build();
+        FilterLanguageIds filterLanguageIds = FilterLanguageIds.builder()
+                .languageIds(languageDataRepository.findAll()
+                        .stream()
+                        .map(LanguageData::getInjestionId)
+                        .collect(Collectors.toSet()))
+                .build();
+
+        FilterSet filterSet = FilterSet.builder()
+                .genreIds(filterGenreIds.getGenreIds())
+                .languageIds(filterLanguageIds.getLanguageIds())
+                .localityIds(new HashSet<>())
+                .tagIds(new HashSet<>())
+                .build();
+
+        String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/genreIds";
+
+        return  webClientBuilder.build()
+                .post()
+                .uri(recoUrl)
+                .body(Mono.just(filterSet), FilterSet.class)
+                .retrieve()
+                .bodyToMono(CardResponse.class)
+                .block();
+    }
+
+    @Override
     public CardResponse getGenericCards() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
