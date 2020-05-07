@@ -42,6 +42,13 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
     }
 
     @Override
+    public AllGenres getAllGenericGenres() {
+        return AllGenres.builder()
+                .all_the_genres(new HashSet<>(genreDataRepository.findByGenericTrue()))
+                .build();
+    }
+
+    @Override
     public AllGenres getAllGenres() {
 
         return AllGenres.builder()

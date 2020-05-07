@@ -35,6 +35,11 @@ public class NewsComponentsEndpoint {
         this.newsComponentsService = newsComponentsService;
     }
 
+    @GetMapping("/generic")
+    ResponseEntity<AllGenres> getGenericGenres() {
+        return ResponseEntity.ok().body(newsComponentsService.getAllGenericGenres());
+    }
+
     @GetMapping("/genres")
     ResponseEntity<AllGenres> getAllGenres() {
 

@@ -15,6 +15,7 @@ import java.util.List;
 public interface NewsComponentsService {
 
     AllGenres getAllGenres();
+    AllGenres getAllGenericGenres();
     void addGenre(NewsComponentsRequest newsComponentsRequest);
     void deleteGenre(Long id);
     void updateGeneric(Long id);
