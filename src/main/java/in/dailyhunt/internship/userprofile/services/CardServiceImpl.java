@@ -88,7 +88,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardResponse getGenreCards(){
+    public CardResponse getGenresCards(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
@@ -126,7 +126,23 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardResponse getLanguageCards() {
+    public CardResponse getGenreCards(Long genreId) {
+        FilterGenreIds filterGenreIds = FilterGenreIds.builder()
+                .genreIds(new HashSet<>(Collections.singleton(genreId)))
+                .build();
+        String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/genreIds";
+
+        return  webClientBuilder.build()
+                .post()
+                .uri(recoUrl)
+                .body(Mono.just(filterGenreIds), FilterGenreIds.class)
+                .retrieve()
+                .bodyToMono(CardResponse.class)
+                .block();
+    }
+
+    @Override
+    public CardResponse getLanguagesCards() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
@@ -164,7 +180,24 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardResponse getLocalityCards() {
+    public CardResponse getLanguageCards(Long langaugeId) {
+        FilterLanguageIds filterLanguageIds = FilterLanguageIds.builder()
+                .languageIds(new HashSet<>(Collections.singleton(langaugeId)))
+                .build();
+
+        String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/languageIds";
+
+        return  webClientBuilder.build()
+                .post()
+                .uri(recoUrl)
+                .body(Mono.just(filterLanguageIds), FilterLanguageIds.class)
+                .retrieve()
+                .bodyToMono(CardResponse.class)
+                .block();
+    }
+
+    @Override
+    public CardResponse getLocalitiesCards() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
@@ -202,7 +235,24 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardResponse getTagCards() {
+    public CardResponse getLocalityCards(Long localityId) {
+        FilterLocalityIds filterLocalityIds = FilterLocalityIds.builder()
+                .localityIds(new HashSet<>(Collections.singleton(localityId)))
+                .build();
+
+        String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/localityIds";
+
+        return  webClientBuilder.build()
+                .post()
+                .uri(recoUrl)
+                .body(Mono.just(filterLocalityIds), FilterLocalityIds.class)
+                .retrieve()
+                .bodyToMono(CardResponse.class)
+                .block();
+    }
+
+    @Override
+    public CardResponse getTagsCards() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
@@ -237,6 +287,23 @@ public class CardServiceImpl implements CardService {
                 .bodyToMono(CardResponse.class)
                 .block();
 
+    }
+
+    @Override
+    public CardResponse getTagCards(Long tagId) {
+        FilterTagIds filterTagIds = FilterTagIds.builder()
+                .tagIds(new HashSet<>(Collections.singleton(tagId)))
+                .build();
+
+        String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/tagIds";
+
+        return  webClientBuilder.build()
+                .post()
+                .uri(recoUrl)
+                .body(Mono.just(filterTagIds), FilterTagIds.class)
+                .retrieve()
+                .bodyToMono(CardResponse.class)
+                .block();
     }
 
     @Override

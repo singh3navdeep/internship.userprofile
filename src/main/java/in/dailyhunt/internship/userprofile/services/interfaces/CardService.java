@@ -7,15 +7,23 @@ public interface CardService {
 
     CardResponse getKeywordCards(String keyword);
 
-    CardResponse getGenreCards();
+    CardResponse getGenresCards();
+
+    CardResponse getGenreCards(Long genreId);
 
     CardResponse getGenericCards();
 
-    CardResponse getLanguageCards();
+    CardResponse getLanguagesCards();
 
-    CardResponse getLocalityCards();
+    CardResponse getLanguageCards(Long langaugeId);
 
-    CardResponse getTagCards();
+    CardResponse getLocalitiesCards();
+
+    CardResponse getLocalityCards(Long localityId);
+
+    CardResponse getTagsCards();
+
+    CardResponse getTagCards(Long tagId);
 
     CardResponse getTrendingCards();
 

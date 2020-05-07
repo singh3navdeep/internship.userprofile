@@ -28,36 +28,67 @@ public class CardsEndpoint {
         return ResponseEntity.ok().body(cardService.getKeywordCards(keyword));
     }
 
+    //Get cards based on user's following genres.
     @GetMapping("/genre")
-    public ResponseEntity<CardResponse> getGenreCards() {
-        return ResponseEntity.ok().body(cardService.getGenreCards());
+    public ResponseEntity<CardResponse> getGenresCards() {
+        return ResponseEntity.ok().body(cardService.getGenresCards());
     }
 
+    //Get cards based on one genre
+    @GetMapping("/genre/{genreId}")
+    public ResponseEntity<CardResponse> getGenreCards(@PathVariable Long genreId) {
+        return ResponseEntity.ok().body(cardService.getGenreCards(genreId));
+    }
+
+    //Get cards with generic genres.
     @GetMapping("/generic")
     public ResponseEntity<CardResponse> getGenericCards() {
         return ResponseEntity.ok().body(cardService.getGenericCards());
     }
 
+    //Get cards based on user's following languages.
     @GetMapping("/language")
-    public ResponseEntity<CardResponse> getLanguageCards() {
-        return ResponseEntity.ok().body(cardService.getLanguageCards());
+    public ResponseEntity<CardResponse> getLanguagesCards() {
+        return ResponseEntity.ok().body(cardService.getLanguagesCards());
     }
 
+    //Get cards based on one language.
+    @GetMapping("/language/{languageId}")
+    public ResponseEntity<CardResponse> getLanguageCards(@PathVariable Long languageId) {
+        return ResponseEntity.ok().body(cardService.getLanguageCards(languageId));
+    }
+
+    //Get cards based on user's following localities.
     @GetMapping("/locality")
-    public ResponseEntity<CardResponse> getLocalityCards() {
-        return ResponseEntity.ok().body(cardService.getLocalityCards());
+    public ResponseEntity<CardResponse> getLocalitiesCards() {
+        return ResponseEntity.ok().body(cardService.getLocalitiesCards());
     }
 
+    //Get cards based on one locality.
+    @GetMapping("/locality/{localityId}")
+    public ResponseEntity<CardResponse> getLocalityCards(@PathVariable Long localityId) {
+        return ResponseEntity.ok().body(cardService.getLocalityCards(localityId));
+    }
+
+    //Get cards based on user's following tags.
     @GetMapping("/tag")
-    public ResponseEntity<CardResponse> getTagCards() {
-        return ResponseEntity.ok().body(cardService.getTagCards());
+    public ResponseEntity<CardResponse> getTagsCards() {
+        return ResponseEntity.ok().body(cardService.getTagsCards());
     }
 
+    //Get cards based on one tag.
+    @GetMapping("/tag/{tagId}")
+    public ResponseEntity<CardResponse> getTagCards(@PathVariable Long tagId) {
+        return ResponseEntity.ok().body(cardService.getTagCards(tagId));
+    }
+
+    //Get cards based on trending.
     @GetMapping("/trending")
     public ResponseEntity<CardResponse> getTrendingCards() {
         return ResponseEntity.ok().body(cardService.getTrendingCards());
     }
 
+    //Get cards based on date range.
     @PostMapping("/date-range")
     public ResponseEntity<CardResponse> getCardsByDateRange(@Valid @RequestBody DateFilter dateFilter){
         return ResponseEntity.ok().body(cardService.getCardsByDateRange(dateFilter));
