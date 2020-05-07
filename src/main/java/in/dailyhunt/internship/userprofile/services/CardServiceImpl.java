@@ -3,6 +3,7 @@ package in.dailyhunt.internship.userprofile.services;
 import in.dailyhunt.internship.userprofile.client_model.request.*;
 import in.dailyhunt.internship.userprofile.client_model.response.Card;
 import in.dailyhunt.internship.userprofile.client_model.response.CardResponse;
+import in.dailyhunt.internship.userprofile.client_model.response.FilterSet;
 import in.dailyhunt.internship.userprofile.entities.*;
 import in.dailyhunt.internship.userprofile.exceptions.BadRequestException;
 import in.dailyhunt.internship.userprofile.repositories.GenreDataRepository;
@@ -105,20 +106,57 @@ public class CardServiceImpl implements CardService {
                         .stream().map(GenreData::getInjestionId)
                         .collect(Collectors.toSet()))
                         .build();
-    /*    Optional<BlockedSet> optionalBlocked = blockedService.getBlockedSet(userId);
+
+        FilterLanguageIds filterLanguageIds = FilterLanguageIds.builder()
+                .languageIds(homeService.getFollowingById(userId)
+                        .getLanguages().getAll_the_languages()
+                        .stream()
+                        .map(LanguageData::getInjestionId)
+                        .collect(Collectors.toSet()))
+                .build();
+
+        FilterSet filterSet = FilterSet.builder()
+                                .genreIds(filterGenreIds.getGenreIds())
+                                .languageIds(filterLanguageIds.getLanguageIds())
+                                .build();
+        Optional<BlockedSet> optionalBlocked = blockedService.getBlockedSet(userId);
         if(optionalBlocked.isPresent()) {
-            filterGenreIds.getGenreIds().removeAll(homeService.getBlockedById(userId)
+        /*    filterGenreIds.getGenreIds().removeAll(homeService.getBlockedById(userId)
                     .getGenres().getAll_the_genres()
                     .stream().map(GenreData::getInjestionId)
                     .collect(Collectors.toSet()));
+
+         */
+            FilterLocalityIds filterLocalityIds = FilterLocalityIds.builder()
+                    .localityIds(homeService.getBlockedById(userId)
+                        .getLocalities().getAll_the_localities()
+                        .stream()
+                        .map(LocalityData::getInjestionId)
+                        .collect(Collectors.toSet()))
+                        .build();
+
+            FilterTagIds filterTagIds = FilterTagIds.builder()
+                    .tagIds(homeService.getBlockedById(userId)
+                        .getTags().getAll_the_tags()
+                        .stream()
+                        .map(TagData::getInjestionId)
+                        .collect(Collectors.toSet()))
+                        .build();
+
+            filterSet.setLocalityIds(filterLocalityIds.getLocalityIds());
+            filterSet.setTagIds(filterTagIds.getTagIds());
         }
-    */
+        else {
+            filterSet.setLocalityIds(new HashSet<>());
+            filterSet.setTagIds(new HashSet<>());
+        }
+
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/genreIds";
 
         return  webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
-                .body(Mono.just(filterGenreIds), FilterGenreIds.class)
+                .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
@@ -127,15 +165,71 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardResponse getGenreCards(Long genreId) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrinciple user = (UserPrinciple) auth.getPrincipal();
+        Long userId = user.getId();
+
+        Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
+        if(!optional_following.isPresent()){
+            return CardResponse.builder()
+                    .cards(new HashSet<>())
+                    .build();
+        }
         FilterGenreIds filterGenreIds = FilterGenreIds.builder()
                 .genreIds(new HashSet<>(Collections.singleton(genreId)))
                 .build();
+        FilterLanguageIds filterLanguageIds = FilterLanguageIds.builder()
+                .languageIds(homeService.getFollowingById(userId)
+                        .getLanguages().getAll_the_languages()
+                        .stream()
+                        .map(LanguageData::getInjestionId)
+                        .collect(Collectors.toSet()))
+                .build();
+
+        FilterSet filterSet = FilterSet.builder()
+                .genreIds(filterGenreIds.getGenreIds())
+                .languageIds(filterLanguageIds.getLanguageIds())
+                .build();
+        Optional<BlockedSet> optionalBlocked = blockedService.getBlockedSet(userId);
+        if(optionalBlocked.isPresent()) {
+        /*    filterGenreIds.getGenreIds().removeAll(homeService.getBlockedById(userId)
+                    .getGenres().getAll_the_genres()
+                    .stream().map(GenreData::getInjestionId)
+                    .collect(Collectors.toSet()));
+
+         */
+            FilterLocalityIds filterLocalityIds = FilterLocalityIds.builder()
+                    .localityIds(homeService.getBlockedById(userId)
+                            .getLocalities().getAll_the_localities()
+                            .stream()
+                            .map(LocalityData::getInjestionId)
+                            .collect(Collectors.toSet()))
+                    .build();
+
+            FilterTagIds filterTagIds = FilterTagIds.builder()
+                    .tagIds(homeService.getBlockedById(userId)
+                            .getTags().getAll_the_tags()
+                            .stream()
+                            .map(TagData::getInjestionId)
+                            .collect(Collectors.toSet()))
+                    .build();
+
+            filterSet.setLocalityIds(filterLocalityIds.getLocalityIds());
+            filterSet.setTagIds(filterTagIds.getTagIds());
+        }
+        else {
+            filterSet.setLocalityIds(new HashSet<>());
+            filterSet.setTagIds(new HashSet<>());
+        }
+
+
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/genreIds";
 
         return  webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
-                .body(Mono.just(filterGenreIds), FilterGenreIds.class)
+                .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
