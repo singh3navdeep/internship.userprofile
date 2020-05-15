@@ -15,6 +15,8 @@ public interface CardService {
 
     CardResponse getGenericCardsWithoutLogin();
 
+    CardResponse getGenreCardsWithoutLogin(Long genreId);
+
     CardResponse getLanguagesCards();
 
     CardResponse getLanguageCards(Long langaugeId);
