@@ -1,13 +1,13 @@
 package in.dailyhunt.internship.userprofile.services;
 
 import in.dailyhunt.internship.userprofile.client_model.request.*;
-import in.dailyhunt.internship.userprofile.client_model.response.Card;
-import in.dailyhunt.internship.userprofile.client_model.response.CardResponse;
-import in.dailyhunt.internship.userprofile.client_model.response.FilterSet;
+import in.dailyhunt.internship.userprofile.client_model.response.*;
 import in.dailyhunt.internship.userprofile.entities.*;
 import in.dailyhunt.internship.userprofile.exceptions.BadRequestException;
 import in.dailyhunt.internship.userprofile.repositories.GenreDataRepository;
 import in.dailyhunt.internship.userprofile.repositories.LanguageDataRepository;
+import in.dailyhunt.internship.userprofile.repositories.LocalityDataRepository;
+import in.dailyhunt.internship.userprofile.repositories.TagDataRepository;
 import in.dailyhunt.internship.userprofile.security.services.UserPrinciple;
 import in.dailyhunt.internship.userprofile.services.interfaces.BlockedService;
 import in.dailyhunt.internship.userprofile.services.interfaces.CardService;
@@ -33,18 +33,22 @@ public class CardServiceImpl implements CardService {
     private final WebClient.Builder webClientBuilder;
     private final GenreDataRepository genreDataRepository;
     private final LanguageDataRepository languageDataRepository;
+    private final LocalityDataRepository localityDataRepository;
+    private final TagDataRepository tagDataRepository;
 
     @Autowired
     public CardServiceImpl(HomeService homeService, FollowingService followingService,
                            BlockedService blockedService, WebClient.Builder webClientBuilder,
-                           GenreDataRepository genreDataRepository,
-                           LanguageDataRepository languageDataRepository) {
+                           GenreDataRepository genreDataRepository, LanguageDataRepository languageDataRepository,
+                           LocalityDataRepository localityDataRepository, TagDataRepository tagDataRepository) {
         this.homeService = homeService;
         this.followingService = followingService;
         this.blockedService = blockedService;
         this.webClientBuilder = webClientBuilder;
         this.genreDataRepository = genreDataRepository;
         this.languageDataRepository = languageDataRepository;
+        this.localityDataRepository = localityDataRepository;
+        this.tagDataRepository = tagDataRepository;
     }
 
     @Override
@@ -203,15 +207,15 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardResponse getGenresCards(){
+    public DataCardResponse getGenresCards(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
 
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
-            return CardResponse.builder()
-                    .cards(new HashSet<>())
+            return DataCardResponse.builder()
+                    .dataCards(new HashSet<>())
                     .build();
         }
         FilterGenreIds filterGenreIds = FilterGenreIds.builder()
@@ -261,13 +265,18 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/genreIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
+        Set<DataCard> set = new HashSet<>();
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
 
     }
 
@@ -754,5 +763,20 @@ public class CardServiceImpl implements CardService {
                 .bodyToMono(CardResponse.class)
                 .block();
 
+    }
+
+    public DataCard makeDataCardFromCard(Card card) {
+        return DataCard.builder()
+                .id(card.getId())
+                .injestionId(card.getInjestionId())
+                .title(card.getTitle())
+                .genres(new HashSet<>(genreDataRepository.findAllByInjestionIdIn(card.getGenreIds())))
+                .tags(new HashSet<>(tagDataRepository.findAllByInjestionIdIn(card.getTagIds())))
+                .languages(new HashSet<>(languageDataRepository.findAllByInjestionIdIn(card.getLanguageIds())))
+                .localities(new HashSet<>(localityDataRepository.findAllByInjestionIdIn(card.getLocalityIds())))
+                .thumbnailPath(card.getThumbnailPath())
+                .trending(card.getTrending())
+                .publishedAt(card.getPublishedAt())
+                .build();
     }
 }

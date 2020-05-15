@@ -2,6 +2,7 @@ package in.dailyhunt.internship.userprofile.endpoints.cards;
 
 import in.dailyhunt.internship.userprofile.client_model.request.DateFilter;
 import in.dailyhunt.internship.userprofile.client_model.response.CardResponse;
+import in.dailyhunt.internship.userprofile.client_model.response.DataCardResponse;
 import in.dailyhunt.internship.userprofile.services.interfaces.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class CardsEndpoint {
 
     //Get cards based on user's following genres.
     @GetMapping("/genre")
-    public ResponseEntity<CardResponse> getGenresCards() {
+    public ResponseEntity<DataCardResponse> getGenresCards() {
         return ResponseEntity.ok().body(cardService.getGenresCards());
     }
 
