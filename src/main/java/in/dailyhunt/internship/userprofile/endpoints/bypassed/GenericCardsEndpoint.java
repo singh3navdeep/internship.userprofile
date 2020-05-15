@@ -1,6 +1,7 @@
 package in.dailyhunt.internship.userprofile.endpoints.bypassed;
 
 import in.dailyhunt.internship.userprofile.client_model.response.CardResponse;
+import in.dailyhunt.internship.userprofile.client_model.response.DataCardResponse;
 import in.dailyhunt.internship.userprofile.services.interfaces.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,17 @@ public class GenericCardsEndpoint {
 
     //Get cards with generic genres.
     @GetMapping("/generic")
-    public ResponseEntity<CardResponse> getGenericCards() {
+    public ResponseEntity<DataCardResponse> getGenericCards() {
         return ResponseEntity.ok().body(cardService.getGenericCardsWithoutLogin());
     }
 
     @GetMapping("/genre/{genreId}")
-    public ResponseEntity<CardResponse> getGenreCards(@PathVariable Long genreId) {
+    public ResponseEntity<DataCardResponse> getGenreCards(@PathVariable Long genreId) {
         return ResponseEntity.ok().body(cardService.getGenreCardsWithoutLogin(genreId));
+    }
+
+    @GetMapping("/trending")
+    public ResponseEntity<DataCardResponse> getTrendingCards() {
+        return ResponseEntity.ok().body(cardService.getTrendingCards());
     }
 }

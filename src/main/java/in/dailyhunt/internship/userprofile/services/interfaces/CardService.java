@@ -1,36 +1,35 @@
 package in.dailyhunt.internship.userprofile.services.interfaces;
 
 import in.dailyhunt.internship.userprofile.client_model.request.DateFilter;
-import in.dailyhunt.internship.userprofile.client_model.response.CardResponse;
 import in.dailyhunt.internship.userprofile.client_model.response.DataCardResponse;
 
 public interface CardService {
 
-    CardResponse getKeywordCards(String keyword);
+    DataCardResponse getKeywordCards(String keyword);
 
     DataCardResponse getGenresCards();
 
-    CardResponse getGenreCards(Long genreId);
+    DataCardResponse getGenreCards(Long genreId);
 
-    CardResponse getGenericCards();
+    DataCardResponse getGenericCards();
 
-    CardResponse getGenericCardsWithoutLogin();
+    DataCardResponse getGenericCardsWithoutLogin();
 
-    CardResponse getGenreCardsWithoutLogin(Long genreId);
+    DataCardResponse getGenreCardsWithoutLogin(Long genreId);
 
-    CardResponse getLanguagesCards();
+    DataCardResponse getLanguagesCards();
 
-    CardResponse getLanguageCards(Long langaugeId);
+    DataCardResponse getLanguageCards(Long langaugeId);
 
-    CardResponse getLocalitiesCards();
+    DataCardResponse getLocalitiesCards();
 
-    CardResponse getLocalityCards(Long localityId);
+    DataCardResponse getLocalityCards(Long localityId);
 
-    CardResponse getTagsCards();
+    DataCardResponse getTagsCards();
 
-    CardResponse getTagCards(Long tagId);
+    DataCardResponse getTagCards(Long tagId);
 
-    CardResponse getTrendingCards();
+    DataCardResponse getTrendingCards();
 
-    CardResponse getCardsByDateRange(DateFilter dateFilter);
+    DataCardResponse getCardsByDateRange(DateFilter dateFilter);
 }

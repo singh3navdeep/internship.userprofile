@@ -52,21 +52,26 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardResponse getKeywordCards(String keyword) {
+    public DataCardResponse getKeywordCards(String keyword) {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/keyword";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .get()
                 .uri(recoUrl+"/"+keyword)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
-
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
-    public CardResponse getGenericCardsWithoutLogin() {
+    public DataCardResponse getGenericCardsWithoutLogin() {
         FilterGenreIds filterGenreIds = FilterGenreIds.builder()
                 .genreIds(genreDataRepository.findByGenericTrue()
                         .stream()
@@ -89,17 +94,23 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/genreIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
-    public CardResponse getGenreCardsWithoutLogin(Long genreId) {
+    public DataCardResponse getGenreCardsWithoutLogin(Long genreId) {
         FilterGenreIds filterGenreIds = FilterGenreIds.builder()
                 .genreIds(new HashSet<>(Collections.singleton(genreId)))
                 .build();
@@ -119,16 +130,23 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/genreIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
+
     @Override
-    public CardResponse getGenericCards() {
+    public DataCardResponse getGenericCards() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
@@ -196,14 +214,19 @@ public class CardServiceImpl implements CardService {
         filterSet.setTagIds(new HashSet<>());
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/genreIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
-
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
@@ -273,6 +296,7 @@ public class CardServiceImpl implements CardService {
                 .bodyToMono(CardResponse.class)
                 .block();
         Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
         cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
         return DataCardResponse.builder()
                 .dataCards(set)
@@ -281,7 +305,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardResponse getGenreCards(Long genreId) {
+    public DataCardResponse getGenreCards(Long genreId) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
@@ -289,8 +313,8 @@ public class CardServiceImpl implements CardService {
 
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
-            return CardResponse.builder()
-                    .cards(new HashSet<>())
+            return DataCardResponse.builder()
+                    .dataCards(new HashSet<>())
                     .build();
         }
         FilterGenreIds filterGenreIds = FilterGenreIds.builder()
@@ -338,25 +362,31 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/genreIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
-    public CardResponse getLanguagesCards() {
+    public DataCardResponse getLanguagesCards() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
 
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
-            return CardResponse.builder()
-                    .cards(new HashSet<>())
+            return DataCardResponse.builder()
+                    .dataCards(new HashSet<>())
                     .build();
         }
         FilterLanguageIds filterLanguageIds = FilterLanguageIds.builder()
@@ -404,26 +434,31 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/languageIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
-
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
-    public CardResponse getLanguageCards(Long langaugeId) {
+    public DataCardResponse getLanguageCards(Long langaugeId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
 
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
-            return CardResponse.builder()
-                    .cards(new HashSet<>())
+            return DataCardResponse.builder()
+                    .dataCards(new HashSet<>())
                     .build();
         }
         FilterLanguageIds filterLanguageIds = FilterLanguageIds.builder()
@@ -469,25 +504,31 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/languageIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
-    public CardResponse getLocalitiesCards() {
+    public DataCardResponse getLocalitiesCards() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
 
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
-            return CardResponse.builder()
-                    .cards(new HashSet<>())
+            return DataCardResponse.builder()
+                    .dataCards(new HashSet<>())
                     .build();
         }
         FilterLocalityIds filterLocalityIds = FilterLocalityIds.builder()
@@ -534,26 +575,31 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/localityIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
-
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
-    public CardResponse getLocalityCards(Long localityId) {
+    public DataCardResponse getLocalityCards(Long localityId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
 
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
-            return CardResponse.builder()
-                    .cards(new HashSet<>())
+            return DataCardResponse.builder()
+                    .dataCards(new HashSet<>())
                     .build();
         }
         FilterLocalityIds filterLocalityIds = FilterLocalityIds.builder()
@@ -598,25 +644,31 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/localityIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
-    public CardResponse getTagsCards() {
+    public DataCardResponse getTagsCards() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
 
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
-            return CardResponse.builder()
-                    .cards(new HashSet<>())
+            return DataCardResponse.builder()
+                    .dataCards(new HashSet<>())
                     .build();
         }
         FilterTagIds filterTagIds = FilterTagIds.builder()
@@ -663,26 +715,31 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/tagIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
-
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
-    public CardResponse getTagCards(Long tagId) {
+    public DataCardResponse getTagCards(Long tagId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple user = (UserPrinciple) auth.getPrincipal();
         Long userId = user.getId();
 
         Optional<FollowingSet> optional_following = followingService.getFollowingSet(userId);
         if(!optional_following.isPresent()){
-            return CardResponse.builder()
-                    .cards(new HashSet<>())
+            return DataCardResponse.builder()
+                    .dataCards(new HashSet<>())
                     .build();
         }
         FilterTagIds filterTagIds = FilterTagIds.builder()
@@ -727,41 +784,58 @@ public class CardServiceImpl implements CardService {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/tagIds";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(filterSet), FilterSet.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
 
     }
 
     @Override
-    public CardResponse getTrendingCards() {
+    public DataCardResponse getTrendingCards() {
 
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/trending";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .get()
                 .uri(recoUrl)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
-
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
     }
 
     @Override
-    public CardResponse getCardsByDateRange(DateFilter dateFilter) {
+    public DataCardResponse getCardsByDateRange(DateFilter dateFilter) {
         String recoUrl = "https://dailyhunt-reco-service.herokuapp.com/api/v1/filter/date-range";
 
-        return  webClientBuilder.build()
+        CardResponse cardResponse = webClientBuilder.build()
                 .post()
                 .uri(recoUrl)
                 .body(Mono.just(dateFilter), DateFilter.class)
                 .retrieve()
                 .bodyToMono(CardResponse.class)
                 .block();
+        Set<DataCard> set = new HashSet<>();
+        assert cardResponse != null;
+        cardResponse.getCards().forEach(card -> set.add(makeDataCardFromCard(card)));
+        return DataCardResponse.builder()
+                .dataCards(set)
+                .build();
 
     }
 

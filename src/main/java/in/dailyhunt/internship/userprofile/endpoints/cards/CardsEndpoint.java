@@ -1,7 +1,6 @@
 package in.dailyhunt.internship.userprofile.endpoints.cards;
 
 import in.dailyhunt.internship.userprofile.client_model.request.DateFilter;
-import in.dailyhunt.internship.userprofile.client_model.response.CardResponse;
 import in.dailyhunt.internship.userprofile.client_model.response.DataCardResponse;
 import in.dailyhunt.internship.userprofile.services.interfaces.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class CardsEndpoint {
     }
 
     @GetMapping("/keyword/{keyword}")
-    public ResponseEntity<CardResponse> getKeywordCards(@PathVariable String keyword) {
+    public ResponseEntity<DataCardResponse> getKeywordCards(@PathVariable String keyword) {
         return ResponseEntity.ok().body(cardService.getKeywordCards(keyword));
     }
 
@@ -37,60 +36,60 @@ public class CardsEndpoint {
 
     //Get cards based on one genre
     @GetMapping("/genre/{genreId}")
-    public ResponseEntity<CardResponse> getGenreCards(@PathVariable Long genreId) {
+    public ResponseEntity<DataCardResponse> getGenreCards(@PathVariable Long genreId) {
         return ResponseEntity.ok().body(cardService.getGenreCards(genreId));
     }
 
     @GetMapping("/generic")
-    public ResponseEntity<CardResponse> getGenericCards() {
+    public ResponseEntity<DataCardResponse> getGenericCards() {
         return ResponseEntity.ok().body(cardService.getGenericCards());
     }
 
     //Get cards based on user's following languages.
     @GetMapping("/language")
-    public ResponseEntity<CardResponse> getLanguagesCards() {
+    public ResponseEntity<DataCardResponse> getLanguagesCards() {
         return ResponseEntity.ok().body(cardService.getLanguagesCards());
     }
 
     //Get cards based on one language.
     @GetMapping("/language/{languageId}")
-    public ResponseEntity<CardResponse> getLanguageCards(@PathVariable Long languageId) {
+    public ResponseEntity<DataCardResponse> getLanguageCards(@PathVariable Long languageId) {
         return ResponseEntity.ok().body(cardService.getLanguageCards(languageId));
     }
 
     //Get cards based on user's following localities.
     @GetMapping("/locality")
-    public ResponseEntity<CardResponse> getLocalitiesCards() {
+    public ResponseEntity<DataCardResponse> getLocalitiesCards() {
         return ResponseEntity.ok().body(cardService.getLocalitiesCards());
     }
 
     //Get cards based on one locality.
     @GetMapping("/locality/{localityId}")
-    public ResponseEntity<CardResponse> getLocalityCards(@PathVariable Long localityId) {
+    public ResponseEntity<DataCardResponse> getLocalityCards(@PathVariable Long localityId) {
         return ResponseEntity.ok().body(cardService.getLocalityCards(localityId));
     }
 
     //Get cards based on user's following tags.
     @GetMapping("/tag")
-    public ResponseEntity<CardResponse> getTagsCards() {
+    public ResponseEntity<DataCardResponse> getTagsCards() {
         return ResponseEntity.ok().body(cardService.getTagsCards());
     }
 
     //Get cards based on one tag.
     @GetMapping("/tag/{tagId}")
-    public ResponseEntity<CardResponse> getTagCards(@PathVariable Long tagId) {
+    public ResponseEntity<DataCardResponse> getTagCards(@PathVariable Long tagId) {
         return ResponseEntity.ok().body(cardService.getTagCards(tagId));
     }
 
     //Get cards based on trending.
     @GetMapping("/trending")
-    public ResponseEntity<CardResponse> getTrendingCards() {
+    public ResponseEntity<DataCardResponse> getTrendingCards() {
         return ResponseEntity.ok().body(cardService.getTrendingCards());
     }
 
     //Get cards based on date range.
     @PostMapping("/date-range")
-    public ResponseEntity<CardResponse> getCardsByDateRange(@Valid @RequestBody DateFilter dateFilter){
+    public ResponseEntity<DataCardResponse> getCardsByDateRange(@Valid @RequestBody DateFilter dateFilter){
         return ResponseEntity.ok().body(cardService.getCardsByDateRange(dateFilter));
     }
 }
