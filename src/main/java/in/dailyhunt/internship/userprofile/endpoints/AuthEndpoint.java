@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -42,7 +43,8 @@ public class AuthEndpoint {
     }
 */
     @PostMapping("/signup")
-    public ResponseEntity<String> createUser(@Valid @RequestBody SignUpForm signUpRequest) throws BadRequestException {
+    public ResponseEntity<String> createUser(@Valid @RequestBody SignUpForm signUpRequest) throws BadRequestException,
+            IOException {
         userService.saveUser(signUpRequest);
         return ResponseEntity.ok().body("User created successfully!");
     }

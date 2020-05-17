@@ -38,6 +38,8 @@ public class SignUpForm {
     @Size(min = 6, max = 40, message = "Password must be atleast 6 to 40 characters long")
     private String password;
 
+    private Optional<String> base64;
+
 
     private Optional<Set<Long>> following_genres;
 

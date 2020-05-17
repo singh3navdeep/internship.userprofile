@@ -1,6 +1,5 @@
 package in.dailyhunt.internship.userprofile.endpoints.bypassed;
 
-import in.dailyhunt.internship.userprofile.client_model.response.CardResponse;
 import in.dailyhunt.internship.userprofile.client_model.response.DataCardResponse;
 import in.dailyhunt.internship.userprofile.services.interfaces.CardService;
 import org.springframework.beans.factory.annotation.Autowired;

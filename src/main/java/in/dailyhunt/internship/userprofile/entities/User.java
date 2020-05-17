@@ -68,5 +68,6 @@ public class User {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Language news_language;
 
+    private String imagePath;
 
 }

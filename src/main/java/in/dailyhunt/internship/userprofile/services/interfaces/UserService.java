@@ -4,6 +4,7 @@ import in.dailyhunt.internship.userprofile.client_model.request.SignUpForm;
 import in.dailyhunt.internship.userprofile.entities.User;
 import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -11,6 +12,6 @@ public interface UserService {
 
     User findUserById(Long userid) throws ResourceNotFoundException;
 
-    User saveUser(SignUpForm signUpForm);
+    User saveUser(SignUpForm signUpForm) throws IOException;
 
 }

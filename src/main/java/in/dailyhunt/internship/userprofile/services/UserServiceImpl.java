@@ -8,14 +8,12 @@ import in.dailyhunt.internship.userprofile.exceptions.BadRequestException;
 import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
 import in.dailyhunt.internship.userprofile.repositories.GenderRepository;
 import in.dailyhunt.internship.userprofile.repositories.UserRepository;
-import in.dailyhunt.internship.userprofile.services.interfaces.BlockedService;
-import in.dailyhunt.internship.userprofile.services.interfaces.FollowingService;
-import in.dailyhunt.internship.userprofile.services.interfaces.LanguageService;
-import in.dailyhunt.internship.userprofile.services.interfaces.UserService;
+import in.dailyhunt.internship.userprofile.services.interfaces.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -27,16 +25,19 @@ public class UserServiceImpl implements UserService {
     private final GenderRepository genderRepository;
     private final FollowingService followingService;
     private final BlockedService blockedService;
+    private final ImageService imageService;
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            LanguageService languageService, GenderRepository genderRepository,
-                           FollowingService followingService, BlockedService blockedService){
+                           FollowingService followingService, BlockedService blockedService,
+                           ImageService imageService){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.languageService = languageService;
         this.genderRepository = genderRepository;
         this.followingService = followingService;
         this.blockedService = blockedService;
+        this.imageService = imageService;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User saveUser(SignUpForm signUpForm) throws BadRequestException {
+    public User saveUser(SignUpForm signUpForm) throws BadRequestException, IOException {
 
         if(userRepository.existsByEmail(signUpForm.getEmail()))
             throw new BadRequestException("This email is already taken");
@@ -96,6 +97,11 @@ public class UserServiceImpl implements UserService {
         }
         user.setGender(send_gender);
 
+        if(signUpForm.getBase64().isPresent()) {
+            String base64string = signUpForm.getBase64().get();
+            String filepath = imageService.saveImage(base64string);
+            user.setImagePath(filepath);
+        }
         userRepository.save(user);
         followingService.addFollowing(PreferenceRequest.builder()
                         .userId(user.getId())
