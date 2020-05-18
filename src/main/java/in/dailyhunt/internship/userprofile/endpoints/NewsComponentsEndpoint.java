@@ -1,10 +1,8 @@
 package in.dailyhunt.internship.userprofile.endpoints;
 
 import in.dailyhunt.internship.userprofile.client_model.request.NewsComponentsRequest;
-import in.dailyhunt.internship.userprofile.client_model.response.AllGenres;
-import in.dailyhunt.internship.userprofile.client_model.response.AllLanguages;
-import in.dailyhunt.internship.userprofile.client_model.response.AllLocalities;
-import in.dailyhunt.internship.userprofile.client_model.response.AllTags;
+import in.dailyhunt.internship.userprofile.client_model.request.SourceRequest;
+import in.dailyhunt.internship.userprofile.client_model.response.*;
 import in.dailyhunt.internship.userprofile.entities.GenreData;
 import in.dailyhunt.internship.userprofile.entities.LanguageData;
 import in.dailyhunt.internship.userprofile.entities.LocalityData;
@@ -113,4 +111,20 @@ public class NewsComponentsEndpoint {
         return ResponseEntity.ok().body("Tag has been deleted successfully");
     }
 
+    @GetMapping("/sources")
+    ResponseEntity<AllSources> getAllSources() {
+        return ResponseEntity.ok().body(newsComponentsService.getAllSources());
+    }
+
+    @PostMapping("/source")
+    public ResponseEntity<String> addSource(@Valid @RequestBody SourceRequest sourceRequest) {
+        newsComponentsService.addSource(sourceRequest);
+        return ResponseEntity.ok().body("Source has been added successfully");
+    }
+
+    @DeleteMapping("/source/{id}")
+    public ResponseEntity<String> deleteSource(@PathVariable Long id) {
+        newsComponentsService.deleteSource(id);
+        return ResponseEntity.ok().body("Source has been deleted successfully");
+    }
 }

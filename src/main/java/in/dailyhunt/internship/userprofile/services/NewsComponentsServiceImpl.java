@@ -1,19 +1,11 @@
 package in.dailyhunt.internship.userprofile.services;
 
 import in.dailyhunt.internship.userprofile.client_model.request.NewsComponentsRequest;
-import in.dailyhunt.internship.userprofile.client_model.response.AllGenres;
-import in.dailyhunt.internship.userprofile.client_model.response.AllLanguages;
-import in.dailyhunt.internship.userprofile.client_model.response.AllLocalities;
-import in.dailyhunt.internship.userprofile.client_model.response.AllTags;
-import in.dailyhunt.internship.userprofile.entities.GenreData;
-import in.dailyhunt.internship.userprofile.entities.LanguageData;
-import in.dailyhunt.internship.userprofile.entities.LocalityData;
-import in.dailyhunt.internship.userprofile.entities.TagData;
+import in.dailyhunt.internship.userprofile.client_model.request.SourceRequest;
+import in.dailyhunt.internship.userprofile.client_model.response.*;
+import in.dailyhunt.internship.userprofile.entities.*;
 import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
-import in.dailyhunt.internship.userprofile.repositories.GenreDataRepository;
-import in.dailyhunt.internship.userprofile.repositories.LanguageDataRepository;
-import in.dailyhunt.internship.userprofile.repositories.LocalityDataRepository;
-import in.dailyhunt.internship.userprofile.repositories.TagDataRepository;
+import in.dailyhunt.internship.userprofile.repositories.*;
 import in.dailyhunt.internship.userprofile.services.interfaces.NewsComponentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,15 +22,18 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
     private final LanguageDataRepository languageDataRepository;
     private final LocalityDataRepository localityDataRepository;
     private final TagDataRepository tagDataRepository;
+    private final SourceDataRepository sourceDataRepository;
     @Autowired
     public NewsComponentsServiceImpl(GenreDataRepository genreDataRepository,
                                      LanguageDataRepository languageDataRepository,
                                      LocalityDataRepository localityDataRepository,
-                                     TagDataRepository tagDataRepository) {
+                                     TagDataRepository tagDataRepository,
+                                     SourceDataRepository sourceDataRepository) {
         this.genreDataRepository = genreDataRepository;
         this.languageDataRepository = languageDataRepository;
         this.localityDataRepository = localityDataRepository;
         this.tagDataRepository = tagDataRepository;
+        this.sourceDataRepository = sourceDataRepository;
     }
 
     @Override
@@ -165,4 +160,31 @@ public class NewsComponentsServiceImpl implements NewsComponentsService {
         }
     }
 
+    @Override
+    public AllSources getAllSources() {
+        return AllSources.builder()
+                .all_the_sources(new HashSet<>(sourceDataRepository.findAll()))
+                .build();
+    }
+
+    @Override
+    public void addSource(SourceRequest sourceRequest) {
+        sourceDataRepository.save(SourceData.builder()
+                .injestionId(sourceRequest.getId())
+                .name(sourceRequest.getName())
+                .imagepath(sourceRequest.getImagepath())
+                .build());
+    }
+
+    @Override
+    public void deleteSource(Long id) {
+        Optional<SourceData> optionalSourceData = sourceDataRepository.findByInjestionId(id);
+        if(optionalSourceData.isPresent()) {
+            SourceData sourceData = optionalSourceData.get();
+            sourceDataRepository.delete(sourceData);
+        }
+        else {
+            throw new ResourceNotFoundException("source not found");
+        }
+    }
 }
