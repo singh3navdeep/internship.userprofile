@@ -1,9 +1,6 @@
 package in.dailyhunt.internship.userprofile.client_model.response;
 
-import in.dailyhunt.internship.userprofile.entities.GenreData;
-import in.dailyhunt.internship.userprofile.entities.LanguageData;
-import in.dailyhunt.internship.userprofile.entities.LocalityData;
-import in.dailyhunt.internship.userprofile.entities.TagData;
+import in.dailyhunt.internship.userprofile.entities.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,6 +15,8 @@ public class DataCard {
     private Long id;
 
     private Long injestionId;
+
+    private SourceData sourceData;
 
     private String title;
 

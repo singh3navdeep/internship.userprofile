@@ -18,6 +18,8 @@ public class Card {
     @Column
     private Long injestionId;
 
+    private Long sourceId;
+
     @Column(columnDefinition = "TEXT")
     private String title;
 

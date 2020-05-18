@@ -4,10 +4,8 @@ import in.dailyhunt.internship.userprofile.client_model.request.*;
 import in.dailyhunt.internship.userprofile.client_model.response.*;
 import in.dailyhunt.internship.userprofile.entities.*;
 import in.dailyhunt.internship.userprofile.exceptions.BadRequestException;
-import in.dailyhunt.internship.userprofile.repositories.GenreDataRepository;
-import in.dailyhunt.internship.userprofile.repositories.LanguageDataRepository;
-import in.dailyhunt.internship.userprofile.repositories.LocalityDataRepository;
-import in.dailyhunt.internship.userprofile.repositories.TagDataRepository;
+import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
+import in.dailyhunt.internship.userprofile.repositories.*;
 import in.dailyhunt.internship.userprofile.security.services.UserPrinciple;
 import in.dailyhunt.internship.userprofile.services.interfaces.BlockedService;
 import in.dailyhunt.internship.userprofile.services.interfaces.CardService;
@@ -35,12 +33,14 @@ public class CardServiceImpl implements CardService {
     private final LanguageDataRepository languageDataRepository;
     private final LocalityDataRepository localityDataRepository;
     private final TagDataRepository tagDataRepository;
+    private final SourceDataRepository sourceDataRepository;
 
     @Autowired
     public CardServiceImpl(HomeService homeService, FollowingService followingService,
                            BlockedService blockedService, WebClient.Builder webClientBuilder,
                            GenreDataRepository genreDataRepository, LanguageDataRepository languageDataRepository,
-                           LocalityDataRepository localityDataRepository, TagDataRepository tagDataRepository) {
+                           LocalityDataRepository localityDataRepository, TagDataRepository tagDataRepository,
+                           SourceDataRepository sourceDataRepository) {
         this.homeService = homeService;
         this.followingService = followingService;
         this.blockedService = blockedService;
@@ -49,6 +49,7 @@ public class CardServiceImpl implements CardService {
         this.languageDataRepository = languageDataRepository;
         this.localityDataRepository = localityDataRepository;
         this.tagDataRepository = tagDataRepository;
+        this.sourceDataRepository = sourceDataRepository;
     }
 
     @Override
@@ -840,9 +841,19 @@ public class CardServiceImpl implements CardService {
     }
 
     public DataCard makeDataCardFromCard(Card card) {
+        SourceData sourceData;
+        if(card.getSourceId() == null)
+            sourceData = null;
+        else {
+            if (sourceDataRepository.findByInjestionId(card.getSourceId()).isPresent())
+                sourceData = sourceDataRepository.findByInjestionId(card.getSourceId()).get();
+            else
+                throw new ResourceNotFoundException("Invalid source id");
+        }
         return DataCard.builder()
                 .id(card.getId())
                 .injestionId(card.getInjestionId())
+                .sourceData(sourceData)
                 .title(card.getTitle())
                 .genres(new HashSet<>(genreDataRepository.findAllByInjestionIdIn(card.getGenreIds())))
                 .tags(new HashSet<>(tagDataRepository.findAllByInjestionIdIn(card.getTagIds())))
