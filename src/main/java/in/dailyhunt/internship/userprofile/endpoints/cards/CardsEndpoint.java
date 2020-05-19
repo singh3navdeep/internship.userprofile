@@ -94,7 +94,7 @@ public class CardsEndpoint {
     }
 
     //Based on user's following sources.
-    @GetMapping("/source")
+    @GetMapping("/sources")
     public ResponseEntity<DataCardResponse> getSourcesCards() {
         return ResponseEntity.ok().body(cardService.getSourcesCards());
     }
