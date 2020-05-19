@@ -100,7 +100,7 @@ public class CardsEndpoint {
     }
 
     //Get cards based on one source.
-    @GetMapping("/source/{genreId}")
+    @GetMapping("/source/{sourceId}")
     public ResponseEntity<DataCardResponse> getSourceCards(@PathVariable Long sourceId) {
         return ResponseEntity.ok().body(cardService.getSourceCards(sourceId));
     }
