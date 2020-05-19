@@ -21,18 +21,21 @@ public class BlockedServiceImpl implements BlockedService {
     private final LanguageDataRepository languageDataRepository;
     private final LocalityDataRepository localityDataRepository;
     private final TagDataRepository tagDataRepository;
+    private final SourceDataRepository sourceDataRepository;
 
     @Autowired
     public BlockedServiceImpl(BlockedSetRepository blockedSetRepository,
                               GenreDataRepository genreDataRepository,
                               LanguageDataRepository languageDataRepository,
                               LocalityDataRepository localityDataRepository,
-                              TagDataRepository tagDataRepository){
+                              TagDataRepository tagDataRepository,
+                              SourceDataRepository sourceDataRepository){
         this.blockedSetRepository = blockedSetRepository;
         this.genreDataRepository = genreDataRepository;
         this.languageDataRepository = languageDataRepository;
         this.localityDataRepository = localityDataRepository;
         this.tagDataRepository = tagDataRepository;
+        this.sourceDataRepository = sourceDataRepository;
     }
     @Override
     @Transactional
@@ -44,6 +47,7 @@ public class BlockedServiceImpl implements BlockedService {
             Set<LanguageData> languageData = blockedSet.getLanguageData();
             Set<LocalityData> localityData = blockedSet.getLocalityData();
             Set<TagData> tagData = blockedSet.getTagData();
+            Set<SourceData> sourceData = blockedSet.getSourceData();
             if(preferenceRequest.getGenreIds().isPresent())
                 genreData = Stream.of(genreData, genreDataRepository.findAllByInjestionIdIn(
                         preferenceRequest.getGenreIds().get()))
@@ -67,12 +71,20 @@ public class BlockedServiceImpl implements BlockedService {
                         preferenceRequest.getTagIds().get()))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toSet());
-            blockedSetRepository.save(BlockedSet.builder()
+
+            if(preferenceRequest.getSourceIds().isPresent())
+                sourceData = Stream.of(sourceData, sourceDataRepository.findAllByInjestionIdIn(
+                        preferenceRequest.getSourceIds().get()))
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toSet());
+
+        blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
                     .genreData(genreData)
                     .languageData(languageData)
                     .localityData(localityData)
                     .tagData(tagData)
+                    .sourceData(sourceData)
                     .build());
         }
         else {
@@ -90,6 +102,9 @@ public class BlockedServiceImpl implements BlockedService {
                     .tagData(new HashSet<>(tagDataRepository
                             .findAllByInjestionIdIn(preferenceRequest.getTagIds()
                                     .orElse(Collections.emptySet()))))
+                    .sourceData(new HashSet<>(sourceDataRepository
+                            .findAllByInjestionIdIn(preferenceRequest.getSourceIds()
+                                    .orElse(Collections.emptySet()))))
                     .build());
         }
     }
@@ -103,6 +118,7 @@ public class BlockedServiceImpl implements BlockedService {
             Set<LanguageData> languageData = blockedSet.getLanguageData();
             Set<LocalityData> localityData = blockedSet.getLocalityData();
             Set<TagData> tagData = blockedSet.getTagData();
+            Set<SourceData> sourceData = blockedSet.getSourceData();
             if(preferenceRequest.getGenreIds().isPresent())
                 genreData.removeAll(genreDataRepository
                         .findAllByInjestionIdIn(preferenceRequest.getGenreIds().get()));
@@ -118,12 +134,18 @@ public class BlockedServiceImpl implements BlockedService {
             if(preferenceRequest.getTagIds().isPresent())
                 tagData.removeAll(tagDataRepository
                         .findAllByInjestionIdIn(preferenceRequest.getTagIds().get()));
+
+            if(preferenceRequest.getSourceIds().isPresent())
+                sourceData.removeAll(sourceDataRepository
+                        .findAllByInjestionIdIn(preferenceRequest.getSourceIds().get()));
+
             blockedSetRepository.save(BlockedSet.builder()
                     .userId(preferenceRequest.getUserId())
                     .genreData(genreData)
                     .languageData(languageData)
                     .localityData(localityData)
                     .tagData(tagData)
+                    .sourceData(sourceData)
                     .build());
         }
         else

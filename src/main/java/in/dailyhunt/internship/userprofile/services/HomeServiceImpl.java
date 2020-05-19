@@ -69,6 +69,8 @@ public class HomeServiceImpl implements HomeService {
                             .all_the_localities(followingSet.getLocalityData()).build())
                     .tags(AllTags.builder()
                             .all_the_tags(followingSet.getTagData()).build())
+                    .souces(AllSources.builder()
+                            .all_the_sources(followingSet.getSourceData()).build())
                     .build();
         }
     }
@@ -97,6 +99,8 @@ public class HomeServiceImpl implements HomeService {
                             .all_the_localities(blockedSet.getLocalityData()).build())
                     .tags(AllTags.builder()
                             .all_the_tags(blockedSet.getTagData()).build())
+                    .souces(AllSources.builder()
+                            .all_the_sources(blockedSet.getSourceData()).build())
                     .build();
         }
     }

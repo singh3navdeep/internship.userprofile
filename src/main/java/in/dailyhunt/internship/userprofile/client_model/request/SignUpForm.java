@@ -49,6 +49,8 @@ public class SignUpForm {
 
     private Optional<Set<Long>> following_tags;
 
+    private Optional<Set<Long>> following_sources;
+
     private Optional<Set<Long>> blocked_genres;
 
     private Optional<Set<Long>> blocked_languages;
@@ -57,7 +59,7 @@ public class SignUpForm {
 
     private Optional<Set<Long>> blocked_tags;
 
-
+    private Optional<Set<Long>> blocked_sources;
 
 //    private String role;
 

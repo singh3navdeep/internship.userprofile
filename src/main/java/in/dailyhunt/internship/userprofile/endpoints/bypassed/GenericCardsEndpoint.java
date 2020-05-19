@@ -35,4 +35,9 @@ public class GenericCardsEndpoint {
     public ResponseEntity<DataCardResponse> getTrendingCards() {
         return ResponseEntity.ok().body(cardService.getTrendingCards());
     }
+
+    @GetMapping("/source/{sourceId}")
+    public ResponseEntity<DataCardResponse> getSourceCards(@PathVariable Long sourceId) {
+        return ResponseEntity.ok().body(cardService.getSourceCardsWithoutLogin(sourceId));
+    }
 }

@@ -109,6 +109,7 @@ public class UserServiceImpl implements UserService {
                         .languageIds(signUpForm.getFollowing_languages())
                         .localityIds(signUpForm.getFollowing_localities())
                         .tagIds(signUpForm.getFollowing_tags())
+                        .sourceIds(signUpForm.getFollowing_sources())
                         .build());
         blockedService.addBlocked(PreferenceRequest.builder()
                 .userId(user.getId())
@@ -116,6 +117,7 @@ public class UserServiceImpl implements UserService {
                 .languageIds(signUpForm.getBlocked_languages())
                 .localityIds(signUpForm.getBlocked_localities())
                 .tagIds(signUpForm.getBlocked_tags())
+                .sourceIds(signUpForm.getBlocked_sources())
                 .build());
         return user;
     }

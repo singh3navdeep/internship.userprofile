@@ -10,4 +10,5 @@ public class PreferenceResponse {
     private AllLanguages languages;
     private AllLocalities localities;
     private AllTags tags;
+    private AllSources souces;
 }

@@ -51,4 +51,11 @@ public class FollowingSet {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<TagData> tagData;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_following_sources",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "source_id"))
+    @JsonIgnoreProperties({"hibernateLaxyInitializer", "handler"})
+    private Set<SourceData> sourceData;
 }

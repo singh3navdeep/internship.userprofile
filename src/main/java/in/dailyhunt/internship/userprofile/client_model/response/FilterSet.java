@@ -12,4 +12,5 @@ public class FilterSet {
     Set<Long> languageIds;
     Set<Long> localityIds;
     Set<Long> tagIds;
+    Set<Long> sourceIds;
 }

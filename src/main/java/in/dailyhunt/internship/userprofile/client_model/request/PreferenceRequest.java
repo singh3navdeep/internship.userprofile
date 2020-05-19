@@ -21,4 +21,6 @@ public class PreferenceRequest {
 
     private Optional<Set<Long>> tagIds;
 
+    private Optional<Set<Long>> sourceIds;
+
 }

@@ -92,4 +92,16 @@ public class CardsEndpoint {
     public ResponseEntity<DataCardResponse> getCardsByDateRange(@Valid @RequestBody DateFilter dateFilter){
         return ResponseEntity.ok().body(cardService.getCardsByDateRange(dateFilter));
     }
+
+    //Based on user's following sources.
+    @GetMapping("/source")
+    public ResponseEntity<DataCardResponse> getSourcesCards() {
+        return ResponseEntity.ok().body(cardService.getSourcesCards());
+    }
+
+    //Get cards based on one source.
+    @GetMapping("/source/{genreId}")
+    public ResponseEntity<DataCardResponse> getSourceCards(@PathVariable Long sourceId) {
+        return ResponseEntity.ok().body(cardService.getSourceCards(sourceId));
+    }
 }

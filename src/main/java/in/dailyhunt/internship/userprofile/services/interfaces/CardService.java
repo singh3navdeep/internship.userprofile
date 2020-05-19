@@ -32,4 +32,10 @@ public interface CardService {
     DataCardResponse getTrendingCards();
 
     DataCardResponse getCardsByDateRange(DateFilter dateFilter);
+
+    DataCardResponse getSourcesCards();
+
+    DataCardResponse getSourceCards(Long sourceId);
+
+    DataCardResponse getSourceCardsWithoutLogin(Long sourceId);
 }
