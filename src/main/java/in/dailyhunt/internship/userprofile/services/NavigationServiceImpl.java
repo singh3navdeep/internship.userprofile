@@ -84,6 +84,7 @@ public class NavigationServiceImpl implements NavigationService {
             Set<GenreData> genreDataSet = new HashSet<>();
             genreDataSet.add(genreData);
             navigationSetRepository.save(NavigationSet.builder()
+                    .userId(userId)
                     .genreDataSet(genreDataSet)
                     .localityDataSet(new HashSet<>())
                     .tagDataSet(new HashSet<>())
@@ -114,6 +115,7 @@ public class NavigationServiceImpl implements NavigationService {
             Set<LocalityData> localityDataSet = new HashSet<>();
             localityDataSet.add(localityData);
             navigationSetRepository.save(NavigationSet.builder()
+                    .userId(userId)
                     .genreDataSet(new HashSet<>())
                     .localityDataSet(localityDataSet)
                     .tagDataSet(new HashSet<>())
@@ -145,6 +147,7 @@ public class NavigationServiceImpl implements NavigationService {
             Set<TagData> tagDataSet = new HashSet<>();
             tagDataSet.add(tagData);
             navigationSetRepository.save(NavigationSet.builder()
+                    .userId(userId)
                     .genreDataSet(new HashSet<>())
                     .localityDataSet(new HashSet<>())
                     .tagDataSet(tagDataSet)
@@ -176,6 +179,7 @@ public class NavigationServiceImpl implements NavigationService {
             Set<SourceData> sourceDataSet = new HashSet<>();
             sourceDataSet.add(sourceData);
             navigationSetRepository.save(NavigationSet.builder()
+                    .userId(userId)
                     .genreDataSet(new HashSet<>())
                     .localityDataSet(new HashSet<>())
                     .tagDataSet(new HashSet<>())
