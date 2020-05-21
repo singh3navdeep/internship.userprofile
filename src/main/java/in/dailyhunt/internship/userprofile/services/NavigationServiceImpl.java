@@ -38,7 +38,11 @@ public class NavigationServiceImpl implements NavigationService {
     }
 
     @Override
-    public NavigationResponse getNavigation(Long userId) throws ResourceNotFoundException {
+    public NavigationResponse getNavigation() throws ResourceNotFoundException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrinciple user = (UserPrinciple) auth.getPrincipal();
+        Long userId = user.getId();
+
         Optional<NavigationSet> optional = navigationSetRepository.findById(userId);
         if(!optional.isPresent())
             return null;

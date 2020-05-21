@@ -5,7 +5,7 @@ import in.dailyhunt.internship.userprofile.exceptions.ResourceNotFoundException;
 
 public interface NavigationService {
 
-    NavigationResponse getNavigation(Long userId);
+    NavigationResponse getNavigation();
 
     void addGenre(Long genreId) throws ResourceNotFoundException;
 

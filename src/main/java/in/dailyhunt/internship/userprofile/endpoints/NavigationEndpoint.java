@@ -24,9 +24,9 @@ public class NavigationEndpoint {
         this.navigationService = navigationService;
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<NavigationResponse> getNavigation(@Valid @PathVariable Long userId) {
-        return ResponseEntity.ok().body(navigationService.getNavigation(userId));
+    @GetMapping
+    public ResponseEntity<NavigationResponse> getNavigation() {
+        return ResponseEntity.ok().body(navigationService.getNavigation());
     }
 
     @PostMapping("/genre/{genreId}")
